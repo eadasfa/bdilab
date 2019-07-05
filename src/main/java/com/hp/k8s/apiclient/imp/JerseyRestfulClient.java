@@ -2,9 +2,9 @@ package com.hp.k8s.apiclient.imp;
 import javax. ws.rs.core.MediaType;
 
 import com.hp.k8s.apiclient.RestfulClient;
-import org.apache.logging . log4j.LogManager;
+import org.apache.catalina.WebResource;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.hp.k8s.apiclient.Restfu1Client;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 public class JerseyRestfulClient implements RestfulClient{
