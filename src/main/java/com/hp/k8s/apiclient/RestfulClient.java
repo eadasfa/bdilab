@@ -10,5 +10,6 @@ public interface RestfulClient {
          public String replace(Params params) ; //替换某个资源对象
          public String options(Params params) ;
          public String head(Params params);
+         public void close();
 
 }
