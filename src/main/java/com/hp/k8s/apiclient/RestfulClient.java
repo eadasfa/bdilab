@@ -1,5 +1,7 @@
 package com.hp.k8s.apiclient;
+
 import com.hp.k8s.apiclient.imp.Params;
+
 public interface RestfulClient {
          public String get(Params params); //获得单个资源对象
          public String list(Params params); //获得资源对象列表

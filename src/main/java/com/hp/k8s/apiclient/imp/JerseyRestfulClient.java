@@ -1,6 +1,6 @@
 package com.hp.k8s.apiclient.imp;
-import javax. ws.rs.core.MediaType;
 
+import javax. ws.rs.core.MediaType;
 import com.hp.k8s.apiclient.RestfulClient;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.WebResource;
@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
+
 public class JerseyRestfulClient implements RestfulClient{
     private static final Logger LOG= LogManager.getLogger(RestfulClient. class .getName());
     private static final String METHOD_PATCH="PATCH";
@@ -51,7 +52,7 @@ public class JerseyRestfulClient implements RestfulClient{
     public String delete(Params params) {
         WebResource resource= _client . resource(_baseUrl + params.buildPath());
         String response= resource.accept(MediaType.APPLICATION_JSON_TYPE). delete(String.class);
-        LOG.info("Detelet resource"+ params.getResourceType().getType() + " / " + params.getName() + " result:\n" + response);
+        LOG.info("Delete resource"+ params.getResourceType().getType() + " / " + params.getName() + " result:\n" + response);
         return response;
     }
     @Override
@@ -97,4 +98,4 @@ public class JerseyRestfulClient implements RestfulClient{
         _client.destroy();
     }
 
-    }
+}
