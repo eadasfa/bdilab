@@ -16,6 +16,9 @@ public class JerseyRestfulClient implements RestfulClient{
     private String _baseUrl=null;
     Client _client=null;
 
+    public JerseyRestfulClient(String ip,int port){
+        this("http://"+ip+":"+port+"/api/v1");
+    }
     public JerseyRestfulClient(String baseUrl) {
         DefaultClientConfig config = new DefaultClientConfig();
         config.getProperties().put(URLConnectionClientHandler.PROPERTY_HTTP_URL_CONNECTION_SET_METHOD_WORKAROUND, true);

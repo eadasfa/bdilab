@@ -76,11 +76,11 @@ public class Params {
             }
         }
         if (null != notLabels){
-            for (String key : labels.keySet()){
+            for (String key : notLabels.keySet()){
                 if(result.length()>0){
                     result.append(",");
                 }
-                result.append(URLEncoder.encode(key+"!="+labels.get(key),"GBK"));
+                result.append(URLEncoder.encode(key+"!="+notLabels.get(key),"GBK"));
             }
         }
 
@@ -96,11 +96,11 @@ public class Params {
          * 感觉有错
          * */
         if (null != notInLabels) {
-            for (String key : inLabels.keySet()){
+            for (String key : notInLabels.keySet()){
                 if(result.length()>0){
                     result.append(URLEncoder.encode(",","GBK"));
                 }
-                result.append(URLEncoder.encode(key+" notin ("+ listToString(inLabels.get(key),",")+ ")","GBK"));
+                result.append(URLEncoder.encode(key+" notin ("+ listToString(notInLabels.get(key),",")+ ")","GBK"));
             }
         }
 

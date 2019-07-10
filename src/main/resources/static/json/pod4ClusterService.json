@@ -1,0 +1,20 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "pod-sample-4-cluster-service",
+    "namespace": "ns-sample",
+    "labels": {
+      "k8s-cs": "kube-cluster-service",
+      "k8s-test": "kube-cluster-test",
+      "k8s-sample-app": "kube-service-sample",
+      "kkk": "bbb"
+    }
+  },
+  "spec": {
+    "containers": [{
+      "name": "mycontainer",
+      "image": "kubeguide/redis-master"
+    }]
+  }
+}
