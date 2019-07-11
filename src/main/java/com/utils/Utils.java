@@ -38,16 +38,16 @@ public class Utils {
     }
 
     public static void main(String[] args) {
-        JSONObject jsonObject = JSONObject.fromObject(getJSON("demo.json"));
-        System.out.println(jsonObject.toString());
+//        JSONObject jsonObject = JSONObject.fromObject(getJSON("demo.json"));
+//        System.out.println(jsonObject.toString());
 //        Iterator it = jsonObject.keySet().iterator();
 ////        while(it.hasNext()){
 ////            Object key = it.next();
 ////            Object value = jsonObject.get(key);
 ////            System.out.println(value+"\n"+value.getClass().getName());
 ////        }
-        parseJson(jsonObject,"",new StringBuilder(),false);
-
+//        parseJson(jsonObject,"",new StringBuilder(),false);
+        System.out.println(Utils.getJSON("pod4MergeJsonPatch.json"));
     }
     //将返回的json串变为缩进形式
     public static String parseJson(String jsonStr){

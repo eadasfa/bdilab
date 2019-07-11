@@ -1,0 +1,10 @@
+{
+  "spec": {
+    "container": [{
+      "name": "mycontainer",
+      "image": "centos",
+      "patchStrategy": "merge",
+      "patchMergeKey": "name"
+    }]
+  }
+}

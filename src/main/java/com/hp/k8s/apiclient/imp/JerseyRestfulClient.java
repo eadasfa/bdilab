@@ -78,7 +78,7 @@ public class JerseyRestfulClient implements RestfulClient{
         LOG.info (" Patch resource:" + params.getJson());
         String response = resource.type (MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).put(String.class, params.getJson ());
         LOG. info ("Replace resource " + params.buildPath () + " result:\n" + response);
-            return response;
+        return response;
     }
     @Override
     public String options(Params params) {

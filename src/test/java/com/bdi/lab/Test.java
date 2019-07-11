@@ -20,16 +20,16 @@ public class Test {
     // 主节点ip
     private static final String IP = "192.168.0.133";
     private static final int PORT = 8080;
-
     private static RestfulClient _restfulClient = new JerseyRestfulClient(IP,PORT);
     public static void main(String[] args) {
         Test test = new Test();
         test.testGetPods();
 //        test.testCreateNamespce();
 //        test.testCreatePod();
-
-
+//        test.testReplacePod();
+        test.testUpdatePod2();
     }
+
     private void testCreateNamespce(){
         Params params =new Params() ;
         params.setResourceType(ResourceType.NAMESPACES) ;
@@ -74,5 +74,32 @@ public class Test {
 
         params.setJson((Utils.getJSON("pod4ClusterService.json")));
         LOG.info("Result: "+ _restfulClient.create(params));
+    }
+
+    // replace方法支支持替换容器 image部分
+    // 从API中获取JSON对象，在该JSON对象基础上修改
+    private void testReplacePod(){
+        Params params = new Params();
+        params.setNamespace("ns-sample");
+        params.setName("pod-sample-in-namespace");
+        params.setJson(Utils.getJSON("pod4Replace.json"));
+        params.setResourceType(ResourceType.PODS);
+        LOG.info(_restfulClient.replace(params));
+    }
+    private void testUpdatePod1(){
+        Params params = new Params();
+        params.setNamespace("ns-sample");
+        params.setName("pod-sample-in-namespace");
+        params.setJson(Utils.getJSON("pod4MergeJsonPatch.json"));
+        params.setResourceType(ResourceType.PODS);
+        LOG.info(_restfulClient.updateWithMediaType(params,"application/merge-patch+json"));
+    }
+    private void testUpdatePod2(){
+        Params params = new Params();
+        params.setNamespace("ns-sample");
+        params.setName("pod-sample-in-namespace");
+        params.setJson(Utils.getJSON("pod4StrategicMerge.json"));
+        params.setResourceType(ResourceType.PODS);
+        LOG.info(_restfulClient.updateWithMediaType(params,"application/strategic-merge-patch+json"));
     }
 }
