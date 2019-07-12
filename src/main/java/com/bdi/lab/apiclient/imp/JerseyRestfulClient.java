@@ -1,13 +1,13 @@
-package com.hp.k8s.apiclient.imp;
-
-import javax. ws.rs.core.MediaType;
-import com.hp.k8s.apiclient.RestfulClient;
+package com.bdi.lab.apiclient.imp;
+import com.bdi.lab.apiclient.RestfulClient;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.WebResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
+
+import javax.ws.rs.core.MediaType;
 
 public class JerseyRestfulClient implements RestfulClient{
     private static final Logger LOG= LogManager.getLogger(RestfulClient. class .getName());

@@ -1,4 +1,4 @@
-package com.hp.k8s.apiclient.imp;
+package com.bdi.lab.apiclient.imp;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

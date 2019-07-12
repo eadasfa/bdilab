@@ -1,4 +1,4 @@
-package com.hp.k8s.apiclient.imp;
+package com.bdi.lab.apiclient.imp;
 
 public enum ResourceType {
 

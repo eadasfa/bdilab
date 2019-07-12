@@ -1,6 +1,4 @@
-package com.utils;
-
-
+package com.bdi.lab.utils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.util.ResourceUtils;

@@ -1,10 +1,10 @@
 package com.bdi.lab;
 
-import com.hp.k8s.apiclient.RestfulClient;
-import com.hp.k8s.apiclient.imp.JerseyRestfulClient;
-import com.hp.k8s.apiclient.imp.Params;
-import com.hp.k8s.apiclient.imp.ResourceType;
-import com.utils.Utils;
+import com.bdi.lab.apiclient.RestfulClient;
+import com.bdi.lab.apiclient.imp.JerseyRestfulClient;
+import com.bdi.lab.apiclient.imp.Params;
+import com.bdi.lab.apiclient.imp.ResourceType;
+import com.bdi.lab.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
