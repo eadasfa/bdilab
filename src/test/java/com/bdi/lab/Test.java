@@ -15,19 +15,32 @@ public class Test {
     private static final Logger LOG= LogManager.getLogger(RestfulClient. class .getName());
 
     // 主节点ip
-    private static final String IP = "192.168.0.133";
+    private static final String IP = "192.168.0.153";
     private static final int PORT = 8080;
     private static RestfulClient _restfulClient = new JerseyRestfulClient(IP,PORT);
     public static void main(String[] args) {
         Test test = new Test();
-        test.testGetPods();
-//        test.testCreateNamespce();
-//        test.testCreatePod();
-//        test.testReplacePod();
-        test.testUpdatePod2();
+//        test.testCreateNamespace();
+//        test.createRC();
+        test.createSVC();
     }
-
-    private void testCreateNamespce(){
+    private void createRC(){
+        Params params =new Params() ;
+        params.setResourceType(ResourceType.REPLICATIONCONTROLLERS) ;
+        params.setNamespace("k8s-test");
+        String jsonName = "myweb-rc.json";
+        params.setJson(Utils.getJSON(jsonName));
+        LOG.info ("Result :"+ _restfulClient.create(params)) ;
+    }
+    private void createSVC(){
+        Params params =new Params() ;
+        params.setResourceType(ResourceType.SERVICES) ;
+        params.setNamespace("k8s-test");
+        String jsonName = "myweb-svc.json";
+        params.setJson(Utils.getJSON(jsonName));
+        LOG.info ("Result :"+ _restfulClient.create(params)) ;
+    }
+    private void testCreateNamespace(){
         Params params =new Params() ;
         params.setResourceType(ResourceType.NAMESPACES) ;
         String jsonName = "namespace.json";
@@ -38,8 +51,8 @@ public class Test {
     private void testGetPods(){
         Params params = new Params();
         params.setResourceType(ResourceType.PODS);
-        params.setNamespace("ns-sample");
-        params.setName("pod-sample-in-namespace");
+        params.setNamespace("k8s-test");
+//        params.setName("pod-sample-in-namespace");
         String result = _restfulClient.list(params);
         LOG.info("Result: "+ result);
         System.out.println(Utils.getPodsFromJson(result));

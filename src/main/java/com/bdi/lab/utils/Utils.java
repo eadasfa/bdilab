@@ -8,14 +8,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Utils {
-
+    public static final String path="test";
     //从文件中读取json文件
     public static String getJSON(String fileName){
         String jsonStr = "";
         try {
 //            File jsonFile = new File(fileName);
             //ResourceUtils.getFile() 方法可以获取到resources 下的文件，可能在linux系统下无效
-            File jsonFile = ResourceUtils.getFile("classpath:static/json/"+fileName);
+            File jsonFile = ResourceUtils.getFile("classpath:"+path+"/"+fileName);
 
             FileReader fileReader = new FileReader(jsonFile);
 
@@ -94,4 +94,5 @@ public class Utils {
         }
         return pods;
     }
+
 }
