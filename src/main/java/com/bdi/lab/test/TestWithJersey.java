@@ -1,4 +1,4 @@
-package com.bdi.lab;
+package com.bdi.lab.test;
 import com.bdi.lab.apiclient.RestfulClient;
 import com.bdi.lab.apiclient.imp.JerseyRestfulClient;
 import com.bdi.lab.apiclient.imp.Params;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Test {
+public class TestWithJersey {
     private static final Logger LOG= LogManager.getLogger(RestfulClient. class .getName());
 
     // 主节点ip
@@ -19,7 +19,7 @@ public class Test {
     private static final int PORT = 8080;
     private static RestfulClient _restfulClient = new JerseyRestfulClient(IP,PORT);
     public static void main(String[] args) {
-        Test test = new Test();
+        TestWithJersey test = new TestWithJersey();
 //        test.testCreateNamespace();
 //        test.createRC();
         test.createSVC();

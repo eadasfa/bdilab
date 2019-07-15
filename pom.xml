@@ -69,6 +69,12 @@
             <classifier>jdk15</classifier>
         </dependency>
 
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <version>3.1.32</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -78,20 +84,20 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <!--Fabric8框架-->
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>fabric8-maven-plugin</artifactId>
-                <version>3.1.32</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>resource</goal>
-                            <goal>helm</goal>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>io.fabric8</groupId>-->
+<!--                <artifactId>fabric8-maven-plugin</artifactId>-->
+<!--                <version>3.1.32</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>resource</goal>-->
+<!--                            <goal>helm</goal>-->
+<!--                            <goal>build</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
