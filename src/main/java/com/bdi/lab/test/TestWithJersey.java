@@ -21,14 +21,14 @@ public class TestWithJersey {
     public static void main(String[] args) {
         TestWithJersey test = new TestWithJersey();
 //        test.testCreateNamespace();
-//        test.createRC();
-        test.createSVC();
+        test.createRC();
+//        test.createSVC();
     }
     private void createRC(){
         Params params =new Params() ;
         params.setResourceType(ResourceType.REPLICATIONCONTROLLERS) ;
-        params.setNamespace("k8s-test");
-        String jsonName = "myweb-rc.json";
+        params.setNamespace("default");
+        String jsonName = "mysql-rc.json";
         params.setJson(Utils.getJSON(jsonName));
         LOG.info ("Result :"+ _restfulClient.create(params)) ;
     }
