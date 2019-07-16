@@ -29,6 +29,15 @@ public class TestWithFabric8 {
                      .withReplicas(num)
                  .endSpec()
              .done() ;
+     _kube.services()
+             .inNamespace(namespace )
+             .withName()
+             .
+    }
+    //通过RC实现停止服务功能
+    public static void stopService(String namespace, String RcName ){
+        changeReplicas(namespace ,RcName ,0);
+
     }
 
 }
