@@ -36,5 +36,15 @@ public class TestWithFabric8 {
         changeReplicas(namespace ,RcName ,0);
 
     }
+    //通过RC实现启动服务功能
+    public static boolean startService(String namespace, String RcName ,Integer num){
+        if(num<=0){
+            System.out.println("Error: num is less than 0！");
+            return false;
+        }
+        changeReplicas(namespace ,RcName ,num);
+        return true;
+
+    }
 
 }
