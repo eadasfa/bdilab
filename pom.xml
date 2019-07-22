@@ -68,6 +68,29 @@
             <version>2.4</version>
             <classifier>jdk15</classifier>
         </dependency>
+      <!--远程控制-->
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>${ganymed-ssh2}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+
+
 
         <dependency>
             <groupId>io.fabric8</groupId>
