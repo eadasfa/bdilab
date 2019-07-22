@@ -21,7 +21,7 @@ public class TestWithJersey {
     public static void main(String[] args) {
         TestWithJersey test = new TestWithJersey();
 //        test.testCreateNamespace();
-        test.createRC();
+//        test.createRC();
 //        test.createSVC();
     }
     private void createRC(){
@@ -59,21 +59,21 @@ public class TestWithJersey {
         params.setName(null);
 
 
-        Map<String,String> labels = new HashMap<String,String>();
-        labels.put("k8s-cs","kube-cluster-service");
-        labels.put("k8s-sample-app","kube-service-sample");
-        params.setLabels(labels);
-        result = _restfulClient.list(params);
-        LOG.info("Result: "+ result);
-        params.setLabels(null);
-
-        Map<String,String> notLabels = new HashMap<String,String>();
-        notLabels.put("k8s-cs","kube-cluster-service");
-        params.setNotLabels(notLabels);
-        result = _restfulClient.list(params);
-        LOG.info("Result: "+ result);
-        System.out.println(Utils.getPodsFromJson(result));
-        params.setNotLabels(null);
+//        Map<String,String> labels = new HashMap<String,String>();
+//        labels.put("k8s-cs","kube-cluster-service");
+//        labels.put("k8s-sample-app","kube-service-sample");
+//        params.setLabels(labels);
+//        result = _restfulClient.list(params);
+//        LOG.info("Result: "+ result);
+//        params.setLabels(null);
+//
+//        Map<String,String> notLabels = new HashMap<String,String>();
+//        notLabels.put("k8s-cs","kube-cluster-service");
+//        params.setNotLabels(notLabels);
+//        result = _restfulClient.list(params);
+//        LOG.info("Result: "+ result);
+//        System.out.println(Utils.getPodsFromJson(result));
+//        params.setNotLabels(null);
     }
     private void testCreatePod(){
         Params params = new Params();
