@@ -1,5 +1,6 @@
 package com.bdi.lab.test;
 
+import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -7,9 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class TestWithFabric8 {
-    private static final String IP = "192.168.0.131";
-    private static final String PORT = "8080";
-    private static KubernetesClient _kube = new DefaultKubernetesClient("http://"+IP+":"+PORT);
+    private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) throws InterruptedException {
         changeReplicas("default","mysql",3);
     }
