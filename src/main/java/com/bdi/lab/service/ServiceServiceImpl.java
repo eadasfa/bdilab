@@ -29,12 +29,6 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceMap;
     }
 
-    public static void main(String[] args) {
-        ServiceServiceImpl ss = new ServiceServiceImpl();
-////        ss.getAllInfo("mysql");
-//        System.out.println(ss.getStatus("mysql"));
-        System.out.println(JSONObject.fromObject(ss.getServiceName()));
-}
     @Override
     public com.bdi.lab.entity.Service getAllInfo(String serviceName) {
         io.fabric8.kubernetes.api.model.Service s = _kube.services()
@@ -45,7 +39,7 @@ public class ServiceServiceImpl implements ServiceService {
         return result;
     }
 
-    @Override
+
     public  String getState(String serviceName) {
 
         Map<String,String> labels = _kube.services().inNamespace(NAMESPACE).withName(serviceName)
@@ -67,6 +61,32 @@ public class ServiceServiceImpl implements ServiceService {
             return "Runing";
         return "Terminated";
 
+    }
+    @Override
+    public void updateReplicas(String namespace, String RcName, int num ){
+        _kube .replicationControllers()
+                .inNamespace(namespace )
+                .withName(RcName )
+                .edit()
+                .editSpec()
+                .withReplicas(num)
+                .endSpec()
+                .done() ;
+    }
+
+    @Override
+    public void stopService(String serviceName) {
+        this.updateReplicas(NAMESPACE,serviceName,0);
+    }
+
+    @Override
+    public boolean startService( String serviceName,Integer num){
+        if(num<=0){
+            System.out.println("Error: num is less than 0！");
+            return false;
+        }
+        this.updateReplicas(NAMESPACE ,serviceName ,num);
+        return true;
     }
 
 }

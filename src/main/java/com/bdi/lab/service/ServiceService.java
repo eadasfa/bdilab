@@ -10,4 +10,10 @@ public interface ServiceService {
     public com.bdi.lab.entity.Service getAllInfo(String serviceName);
 
     public String getState(String serviceName);
+
+    public void updateReplicas(String namespace, String RcName, int num );
+
+    public void stopService(String serviceName);
+
+    public boolean startService(String Service,Integer num);
 }
