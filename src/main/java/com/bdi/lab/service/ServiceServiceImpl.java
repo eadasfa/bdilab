@@ -15,7 +15,7 @@ import java.util.Map;
 public class ServiceServiceImpl implements ServiceService {
     private static final String IP = "192.168.0.153";
     private static final String PORT = "8080";
-    private static final String NAMESPACE = "k8s-test";
+    private static final String NAMESPACE = "default";
     private static KubernetesClient _kube = new DefaultKubernetesClient("http://"+IP+":"+PORT);
     @Override
     public Map<String, String> getServiceName() {
@@ -57,8 +57,12 @@ public class ServiceServiceImpl implements ServiceService {
 //                }
 //            }
 //        }
+//        _kube.services().inNamespace(NAMESPACE).withName("mysql")
+//                .edit()
+//                .editStatus()
+//                .
         pods.get(0).getStatus().getContainerStatuses().forEach(n->{
-            System.out.println(n.getName()+" "+n.getState());
+            System.out.println(n.getName()+"\n"+n.getState().getRunning());
         });
         return "";
     }
