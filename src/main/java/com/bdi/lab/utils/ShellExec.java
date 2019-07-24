@@ -22,6 +22,9 @@ public class ShellExec {
             System.out.println(n);
         });
     }
+    public static StringBuilder execute(String cmd) {
+        return execute(Common.USERNAME,Common.PASSWORD,Common.IP, cmd);
+    }
     public static StringBuilder execute(String userName, String password, String ip, String cmd) {
         int port = 22;
         StringBuilder result = new StringBuilder("");
