@@ -16,6 +16,11 @@ import java.util.Map;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
+    public static void main(String[] args) {
+//       List<Container> containertemp= _kube.pods().inNamespace("k8s-test").withName("mysql-6lcd8").get().getSpec().getContainers();
+//        _kube.pods().inNamespace("k8s-test").withName("mysql-6lcd8").edit().editSpec().removeFromContainers(containertemp.get(0));
+    _kube.services().inNamespace("k8s-test").withName("myweb").delete();
+    }
 
     private static final String NAMESPACE = "default";
     private static KubernetesClient _kube = Common._kube;
