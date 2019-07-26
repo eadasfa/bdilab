@@ -22,7 +22,7 @@ public class ServiceServiceImpl implements ServiceService {
     _kube.services().inNamespace("k8s-test").withName("myweb").delete();
     }
 
-    private static final String NAMESPACE = "default";
+    private static final String NAMESPACE = "k8s-test";
     private static KubernetesClient _kube = Common._kube;
     @Override
     public Map<String, String> getServiceName() {
@@ -50,8 +50,8 @@ public class ServiceServiceImpl implements ServiceService {
         Map<String,String> labels = _kube.services().inNamespace(NAMESPACE).withName(serviceName)
                 .get().getSpec().getSelector();
         List<Pod> pods = _kube.pods().inNamespace(NAMESPACE).withLabels(labels).list().getItems();
-         boolean flag = false;
-         lable:
+        boolean flag = false;
+        lable:
         for (Pod pod: pods){
             pod.getStatus().getContainerStatuses().get(0).getState();
             List<ContainerStatus> containers = pod.getStatus().getContainerStatuses();

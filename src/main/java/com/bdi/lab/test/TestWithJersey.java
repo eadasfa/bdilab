@@ -3,6 +3,7 @@ import com.bdi.lab.apiclient.RestfulClient;
 import com.bdi.lab.apiclient.imp.JerseyRestfulClient;
 import com.bdi.lab.apiclient.imp.Params;
 import com.bdi.lab.apiclient.imp.ResourceType;
+import com.bdi.lab.utils.Common;
 import com.bdi.lab.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,20 +16,20 @@ public class TestWithJersey {
     private static final Logger LOG= LogManager.getLogger(RestfulClient. class .getName());
 
     // 主节点ip
-    private static final String IP = "192.168.0.153";
+    private static final String IP = Common.IP;
     private static final int PORT = 8080;
     private static RestfulClient _restfulClient = new JerseyRestfulClient(IP,PORT);
     public static void main(String[] args) {
         TestWithJersey test = new TestWithJersey();
 //        test.testCreateNamespace();
 //        test.createRC();
-//        test.createSVC();
+        test.createSVC();
     }
     private void createRC(){
         Params params =new Params() ;
         params.setResourceType(ResourceType.REPLICATIONCONTROLLERS) ;
-        params.setNamespace("default");
-        String jsonName = "mysql-rc.json";
+        params.setNamespace("k8s-test");
+        String jsonName = "myweb-rc.json";
         params.setJson(Utils.getJSON(jsonName));
         LOG.info ("Result :"+ _restfulClient.create(params)) ;
     }

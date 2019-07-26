@@ -1,7 +1,7 @@
 {
   "apiVersion":"v1",
   "kind":"ReplicationController",
-  "metadata":{"name":"mysql-default"},
+  "metadata":{"name":"mysql"},
   "spec":{
     "replicas":1,
     "selector":{
