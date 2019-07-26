@@ -20,7 +20,7 @@ public interface ServiceService {
     public void deleteService(String serviceName);
 
     public  Map<String,String> createService(String nameSpace,
-                                             Map<String,String> map,String type,
+                                             Map<String,String> selector,String type,
                                              String name,Integer Port,
-                                             Integer nodePort);
+                                             Integer nodePort,Map<String,String> lables);
 }

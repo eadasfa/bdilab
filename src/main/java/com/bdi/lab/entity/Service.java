@@ -15,12 +15,15 @@ public class Service extends io.fabric8.kubernetes.api.model.Service{
     public Service(io.fabric8.kubernetes.api.model.Service service){
         setApiVersion(service.getApiVersion());
         setKind(service.getKind());
-        setMetadata(service.getMetadata());
         setStatus(service.getStatus());
-        setSpec(service.getSpec());
         service.getAdditionalProperties().forEach((k,v)->{
             setAdditionalProperty(k,v);
         });
+
+
+        setMetadata(service.getMetadata());
+        setSpec(service.getSpec());
+
     }
     public Service(){
 
@@ -36,10 +39,11 @@ public class Service extends io.fabric8.kubernetes.api.model.Service{
     public static Service newInstance(String nameSpace,
                               Map<String,String> map,String type,
                               String name,Integer Port,
-                              Integer nodePort){
+                              Integer nodePort,Map<String,String> labelsMap){
         ObjectMeta obj =new ObjectMeta();
         obj.setName(name);
         obj.setNamespace(nameSpace);
+        obj.setLabels(labelsMap);
         ServiceSpec spec=new ServiceSpec();
         spec.setType(type);
         ServicePort port=new ServicePort();

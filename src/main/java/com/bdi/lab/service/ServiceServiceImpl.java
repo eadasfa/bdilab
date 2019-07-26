@@ -3,13 +3,9 @@ package com.bdi.lab.service;
 import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +13,13 @@ import java.util.Map;
 @Service
 public class ServiceServiceImpl implements ServiceService {
 
-
-
     private static final String NAMESPACE = "k8s-test";
     private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) {
-
+//        ServiceServiceImpl s = new ServiceServiceImpl();
+//        Map<String,String> map = new HashMap<>();
+//        map.put("app","myweb");
+//        s.createService(NAMESPACE,map,"NodePort","myweb",8080,30001);
     }
     @Override
     public Map<String, String> getServiceName() {
@@ -116,11 +113,12 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Map<String,String> createService(String nameSpace,
-                             Map<String,String> map,String type,
+                             Map<String,String> selector,String type,
                              String name,Integer Port,
-                             Integer nodePort){
+                             Integer nodePort,Map<String,String> lables){
         Map<String,String> resultMap = new HashMap<>();
-        com.bdi.lab.entity.Service service=com.bdi.lab.entity.Service.newInstance(nameSpace,map,type,name,Port,nodePort);
+        com.bdi.lab.entity.Service service=com.bdi.lab.entity.Service.newInstance(nameSpace,
+                selector,type,name,Port,nodePort,lables);
         try {
             _kube.services().inNamespace(NAMESPACE).create(service);
         }catch (KubernetesClientException e){
