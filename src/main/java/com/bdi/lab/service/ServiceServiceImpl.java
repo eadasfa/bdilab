@@ -80,32 +80,52 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public boolean stopService(String serviceName) {
+    public Map<String,String> stopService(String serviceName) {
         this.updateReplicas(NAMESPACE,serviceName,0);
-        return true;
+        Map<String,String> resultMap = new HashMap<>();
+        resultMap.put("code","1");
+        return resultMap;
     }
 
     @Override
-    public boolean startService( String serviceName,Integer num){
+    public Map<String,String> startService( String serviceName,Integer num){
+        Map<String,String> resultMap = new HashMap<>();
         if(num<=0){
-            System.out.println("Error: num is less than 0！");
-            return false;
+            resultMap.put("message","Error: num is less than 0！");
+            resultMap.put("code","0");
+            return resultMap;
+        }
+        if(getState(serviceName).equals("Running")){
+            resultMap.put("message","Error: The service is running");
+            resultMap.put("code","0");
+            return resultMap;
         }
         this.updateReplicas(NAMESPACE ,serviceName ,num);
-        return true;
+        resultMap.put("code","1");
+        return resultMap;
     }
+    @Override
     public void deleteService(String serviceName){
         _kube.services().inNamespace(NAMESPACE).withName(serviceName).delete();
     }
-    public void creatService(String nameSpace,
+
+    @Override
+    public Map<String,String> createService(String nameSpace,
                              Map<String,String> map,String type,
                              String name,Integer Port,
                              Integer nodePort){
+        Map<String,String> resultMap = new HashMap<>();
         com.bdi.lab.entity.Service service=com.bdi.lab.entity.Service.newInstance(nameSpace,map,type,name,Port,nodePort);
         try {
             _kube.services().inNamespace(NAMESPACE).create(service);
         }catch (KubernetesClientException e){
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
+            resultMap.put("message",e.getMessage());
+            resultMap.put("code","0");
+            return resultMap;
         }
+        resultMap.put("code","1");
+        return resultMap;
+
     }
 }

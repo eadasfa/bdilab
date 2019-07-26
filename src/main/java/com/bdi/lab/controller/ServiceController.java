@@ -33,13 +33,12 @@ public class ServiceController {
     }
     @PostMapping("/stopService/{serviceName}")
     public ResponseEntity stopService(@PathVariable("serviceName") String serviceName){
-        service.stopService(serviceName);
-        return ResponseEntity.ok("code: 1");
+        return ResponseEntity.ok(service.stopService(serviceName));
     }
     @PostMapping("/startService/{serviceName}/{num}")
     public ResponseEntity startService(@PathVariable("serviceName") String serviceName,
                                        @PathVariable("num") Integer num){
 
-        return ResponseEntity.ok("code: "+(service.startService(serviceName,num)?1:0));
+        return ResponseEntity.ok(service.startService(serviceName,num));
     }
 }
