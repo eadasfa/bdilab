@@ -13,7 +13,7 @@ public interface ServiceService {
 
     public void updateReplicas(String namespace, String RcName, int num );
 
-    public void stopService(String serviceName);
+    public boolean stopService(String serviceName);
 
     public boolean startService(String Service,Integer num);
 
