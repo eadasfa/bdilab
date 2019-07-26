@@ -81,8 +81,13 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Map<String,String> stopService(String serviceName) {
-        this.updateReplicas(NAMESPACE,serviceName,0);
         Map<String,String> resultMap = new HashMap<>();
+        if(!getState(serviceName).equals("Running")){
+            resultMap.put("message","Error: The service is terminated");
+            resultMap.put("code","0");
+            return resultMap;
+        }
+        this.updateReplicas(NAMESPACE,serviceName,0);
         resultMap.put("code","1");
         return resultMap;
     }
