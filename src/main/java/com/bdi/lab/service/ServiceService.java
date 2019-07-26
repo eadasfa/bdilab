@@ -16,4 +16,6 @@ public interface ServiceService {
     public void stopService(String serviceName);
 
     public boolean startService(String Service,Integer num);
+
+    public void deleteService(String serviceName);
 }

@@ -6,6 +6,7 @@ import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,12 @@ import java.util.Map;
 @Service
 public class ServiceServiceImpl implements ServiceService {
     public static void main(String[] args) {
-//       List<Container> containertemp= _kube.pods().inNamespace("k8s-test").withName("mysql-6lcd8").get().getSpec().getContainers();
-//        _kube.pods().inNamespace("k8s-test").withName("mysql-6lcd8").edit().editSpec().removeFromContainers(containertemp.get(0));
-    _kube.services().inNamespace("k8s-test").withName("myweb").delete();
+
+//    _kube.services().inNamespace("k8s-test").withName("myweb").delete();
+        ServiceServiceImpl serImpl=new ServiceServiceImpl();
+            Map<String,String> map=new HashMap<>();
+            map.put("app","myweb");
+        serImpl.creatService(NAMESPACE,map,"NodePort","myweb2",8080,30002);
     }
 
     private static final String NAMESPACE = "k8s-test";
@@ -93,5 +97,18 @@ public class ServiceServiceImpl implements ServiceService {
         this.updateReplicas(NAMESPACE ,serviceName ,num);
         return true;
     }
-
+    public void deleteService(String serviceName){
+        _kube.services().inNamespace(NAMESPACE).withName(serviceName).delete();
+    }
+    public void creatService(String nameSpace,
+                             Map<String,String> map,String type,
+                             String name,Integer Port,
+                             Integer nodePort){
+        com.bdi.lab.entity.Service service=com.bdi.lab.entity.Service.newInstance(nameSpace,map,type,name,Port,nodePort);
+        try {
+            _kube.services().inNamespace(NAMESPACE).create(service);
+        }catch (KubernetesClientException e){
+            System.out.println(e.getMessage());
+        }
+    }
 }

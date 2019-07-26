@@ -33,7 +33,7 @@ public class Service extends io.fabric8.kubernetes.api.model.Service{
     public void setState(String state) {
         this.state = state;
     }
-    public static Service newInstance(String nameSpace,String serviceName,
+    public static Service newInstance(String nameSpace,
                               Map<String,String> map,String type,
                               String name,Integer Port,
                               Integer nodePort){
