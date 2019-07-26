@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/service")
@@ -32,5 +30,15 @@ public class ServiceController {
 
         return ResponseEntity.ok(service.getAllInfo(serviceName));
 //        return JSONObject.fromObject(service.getAllInfo(serviceName)).toString();
+    }
+    @PostMapping("/stopService/{serviceName}")
+    public ResponseEntity stopService(@PathVariable("serviceName") String serviceName){
+        return ResponseEntity.ok(service.stopService(serviceName));
+    }
+    @PostMapping("/startService/{serviceName}/{num}")
+    public ResponseEntity startService(@PathVariable("serviceName") String serviceName,
+                                       @PathVariable("num") Integer num){
+
+        return ResponseEntity.ok(service.startService(serviceName,num));
     }
 }

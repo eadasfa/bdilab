@@ -1,7 +1,6 @@
 package com.bdi.lab.service;
 
 import com.bdi.lab.utils.Common;
-import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
@@ -16,14 +15,11 @@ import java.util.Map;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
-    public static void main(String[] args) {
-//       List<Container> containertemp= _kube.pods().inNamespace("k8s-test").withName("mysql-6lcd8").get().getSpec().getContainers();
-//        _kube.pods().inNamespace("k8s-test").withName("mysql-6lcd8").edit().editSpec().removeFromContainers(containertemp.get(0));
-    _kube.services().inNamespace("k8s-test").withName("myweb").delete();
-    }
-
     private static final String NAMESPACE = "k8s-test";
     private static KubernetesClient _kube = Common._kube;
+    public static void main(String[] args) {
+
+    }
     @Override
     public Map<String, String> getServiceName() {
         Map<String, String> serviceMap = new HashMap<>();
@@ -63,7 +59,7 @@ public class ServiceServiceImpl implements ServiceService {
             }
         }
         if(flag)
-            return "Runing";
+            return "Running";
         return "Terminated";
 
     }
@@ -73,15 +69,16 @@ public class ServiceServiceImpl implements ServiceService {
                 .inNamespace(namespace )
                 .withName(RcName )
                 .edit()
-                .editSpec()
-                .withReplicas(num)
-                .endSpec()
+                    .editSpec()
+                        .withReplicas(num)
+                    .endSpec()
                 .done() ;
     }
 
     @Override
-    public void stopService(String serviceName) {
+    public boolean stopService(String serviceName) {
         this.updateReplicas(NAMESPACE,serviceName,0);
+        return true;
     }
 
     @Override
