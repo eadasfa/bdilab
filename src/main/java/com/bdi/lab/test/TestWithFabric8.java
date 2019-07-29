@@ -10,7 +10,9 @@ import java.util.Map;
 public class TestWithFabric8 {
     private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) throws InterruptedException {
-        changeReplicas("default","mysql",3);
+//        changeReplicas("default","mysql",3);
+//        _kube.services().inNamespace("k8s-test").withName("myweb").delete();
+
     }
     public static int getReplicas(String namespace, String RcName){
         return _kube.replicationControllers().inNamespace(namespace).withName(RcName)

@@ -1,93 +1,62 @@
 package com.bdi.lab.entity;
 
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ServicePort;
 import io.fabric8.kubernetes.api.model.ServiceSpec;
 import io.fabric8.kubernetes.api.model.ServiceStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class Service{
+public class Service extends io.fabric8.kubernetes.api.model.Service{
     private String state;
-    private String apiVersion;
-    private String kind;
-    private ObjectMeta metadata;
-    private ServiceSpec spec;
-    private ServiceStatus status;
-    private Map<String, Object> additionalProperties ;
 
     public Service(io.fabric8.kubernetes.api.model.Service service){
         setApiVersion(service.getApiVersion());
         setKind(service.getKind());
-        setMetadata(service.getMetadata());
-        setAdditionalProperties(service.getAdditionalProperties());
         setStatus(service.getStatus());
+        service.getAdditionalProperties().forEach((k,v)->{
+            setAdditionalProperty(k,v);
+        });
+
+
+        setMetadata(service.getMetadata());
         setSpec(service.getSpec());
+
     }
+    public Service(){
+
+    }
+
     public String getState() {
         return state;
     }
 
-    public void setState(String phase) {
-        this.state = phase;
+    public void setState(String state) {
+        this.state = state;
     }
+    public static Service newInstance(String nameSpace,
+                              Map<String,String> map,String type,
+                              String name,Integer Port,
+                              Integer nodePort,Map<String,String> labelsMap){
+        ObjectMeta obj =new ObjectMeta();
+        obj.setName(name);
+        obj.setNamespace(nameSpace);
+        obj.setLabels(labelsMap);
+        ServiceSpec spec=new ServiceSpec();
+        spec.setType(type);
+        ServicePort port=new ServicePort();
+        port.setPort(Port);
+        port.setNodePort(nodePort);
+        List<ServicePort> servicePorts=new ArrayList<>();
+        servicePorts.add(port);
+        spec.setPorts(servicePorts);
+        spec.setSelector(map);
+        Service service =new Service();
+        service.setMetadata(obj);
+        service.setSpec(spec);
+        return service;
 
-    public String getApiVersion() {
-        return apiVersion;
-    }
-
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
-    }
-
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
-
-    public ObjectMeta getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(ObjectMeta metadata) {
-        this.metadata = metadata;
-    }
-
-    public ServiceSpec getSpec() {
-        return spec;
-    }
-
-    public void setSpec(ServiceSpec spec) {
-        this.spec = spec;
-    }
-
-    public ServiceStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ServiceStatus status) {
-        this.status = status;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
-    }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
-
-    @Override
-    public String toString() {
-        return "Service(" +
-                "state=" + state  +
-                ", apiVersion=" + apiVersion  +
-                ", kind=" + kind  +
-                ", metadata=" + metadata +
-                ", spec=" + spec +
-                ", status=" + status +
-                ", additionalProperties=" + additionalProperties +
-                ')';
     }
 }

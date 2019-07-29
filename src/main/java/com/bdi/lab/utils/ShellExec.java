@@ -16,11 +16,12 @@ public class ShellExec {
         String ip = "192.168.0.153";
         String username = "root";
         String passwd = "123456";
-        String cmd = "kubectl describe svc myweb --namespace=k8s-test";
+        String cmd = "top ";
         StringBuilder result = execute(username,passwd,ip,cmd);
-        Arrays.stream(getEndPoints(result)).forEach(n->{
-            System.out.println(n);
-        });
+        System.out.println(result.toString());
+//        Arrays.stream(getEndPoints(result)).forEach(n->{
+//            System.out.println(n);
+//        });
     }
     public static StringBuilder execute(String cmd) {
         return execute(Common.USERNAME,Common.PASSWORD,Common.IP, cmd);

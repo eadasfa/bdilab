@@ -13,7 +13,14 @@ public interface ServiceService {
 
     public void updateReplicas(String namespace, String RcName, int num );
 
-    public void stopService(String serviceName);
+    public Map<String,String> stopService(String serviceName);
 
-    public boolean startService(String Service,Integer num);
+    public Map<String,String> startService(String Service,Integer num);
+
+    public void deleteService(String serviceName);
+
+    public  Map<String,String> createService(String nameSpace,
+                                             Map<String,String> selector,String type,
+                                             String name,Integer Port,
+                                             Integer nodePort,Map<String,String> lables);
 }
