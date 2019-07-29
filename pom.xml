@@ -75,6 +75,21 @@
             <version>3.1.32</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.buoyant/istio -->
+        <dependency>
+            <groupId>io.buoyant</groupId>
+            <artifactId>istio_2.12</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/me.snowdrop/istio-client -->
+        <dependency>
+            <groupId>me.snowdrop</groupId>
+            <artifactId>istio-client</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
