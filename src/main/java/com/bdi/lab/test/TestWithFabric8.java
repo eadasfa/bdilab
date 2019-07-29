@@ -4,14 +4,17 @@ import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import me.snowdrop.istio.api.networking.v1alpha3.VirtualService;
+import me.snowdrop.istio.client.DefaultIstioClient;
+import me.snowdrop.istio.client.IstioClient;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class TestWithFabric8 {
     private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) throws InterruptedException {
-//        changeReplicas("default","mysql",3);
-//        _kube.services().inNamespace("k8s-test").withName("myweb").delete();
+        IstioClient client = new DefaultIstioClient();
 
     }
     public static int getReplicas(String namespace, String RcName){

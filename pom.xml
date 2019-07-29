@@ -75,11 +75,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.buoyant/istio -->
-        <dependency>
-            <groupId>io.buoyant</groupId>
-            <artifactId>istio_2.12</artifactId>
-            <version>1.6.4</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.buoyant</groupId>-->
+<!--            <artifactId>istio_2.12</artifactId>-->
+<!--            <version>1.6.4</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/me.snowdrop/istio-client -->
         <dependency>
