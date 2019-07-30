@@ -1,9 +1,7 @@
 package com.bdi.lab.test;
 
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import me.snowdrop.istio.api.networking.v1alpha3.DestinationRule;
-import me.snowdrop.istio.api.networking.v1alpha3.DestinationRuleSpec;
-import me.snowdrop.istio.api.networking.v1alpha3.Subset;
+import me.snowdrop.istio.api.networking.v1alpha3.*;
 import me.snowdrop.istio.client.DefaultIstioClient;
 import me.snowdrop.istio.client.IstioClient;
 
@@ -16,8 +14,9 @@ import static com.bdi.lab.utils.Common.*;
 
 public class TestIstio {
     public static void main(String[] args){
-        System.out.println(_istio.destinationRule().inNamespace("k8s-test").withName("myweb").get());
-//        createDR();
+//        System.out.println(_istio.destinationRule().inNamespace("k8s-test").withName("myweb").get());
+////        createDR();
+        _istio.virtualService().inNamespace("k8s-test").create(newInstance());
     }
     public static void createDR(){
         DestinationRule dr = new DestinationRule();
@@ -45,5 +44,36 @@ public class TestIstio {
         dr.setSpec(drs);
 
         _istio.destinationRule().inNamespace("k8s-test").create(dr);
+    }
+    public static VirtualService newInstance(){
+        VirtualService virtualService=new VirtualService();
+        ObjectMeta mata=new ObjectMeta();
+        mata.setName("myweb");
+        virtualService.setMetadata(mata);
+        VirtualServiceSpec spec=new VirtualServiceSpec();
+        List<String> hostList=new ArrayList<String>();
+        hostList.add("myweb");
+        spec.setHosts(hostList);
+        List<HTTPRoute> httpRouteList=new ArrayList<HTTPRoute>();
+        List<HTTPRouteDestination> httpRouteDestinationList=new ArrayList<HTTPRouteDestination>();
+        Destination destination=new Destination();
+        destination.setHost("myweb");
+        destination.setSubset("v1");
+        Destination destination2=new Destination();
+        destination2.setHost("myweb");
+        destination2.setSubset("v2");
+        httpRouteDestinationList.add(new HTTPRouteDestination());
+        httpRouteDestinationList.add(new HTTPRouteDestination());
+        httpRouteDestinationList.get(0).setDestination(destination);
+        httpRouteDestinationList.get(1).setDestination(destination2);
+        httpRouteList.add(new HTTPRoute());
+        httpRouteList.get(0).setRoute(httpRouteDestinationList);
+        httpRouteDestinationList.get(0).setWeight(75);
+        httpRouteDestinationList.get(1).setWeight(25);
+        spec.setHttp(httpRouteList);
+
+        virtualService.setSpec(spec);
+
+        return virtualService;
     }
 }
