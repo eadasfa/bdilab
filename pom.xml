@@ -68,10 +68,16 @@
             <version>2.4</version>
             <classifier>jdk15</classifier>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.fabric8</groupId>-->
+<!--            <artifactId>fabric8-maven-plugin</artifactId>-->
+<!--            <version>3.1.32</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-client -->
         <dependency>
             <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
-            <version>3.1.32</version>
+            <artifactId>kubernetes-client</artifactId>
+            <version>4.3.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.buoyant/istio -->
@@ -86,6 +92,12 @@
             <groupId>me.snowdrop</groupId>
             <artifactId>istio-client</artifactId>
             <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.53</version>
         </dependency>
 
 

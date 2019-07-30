@@ -16,7 +16,7 @@ public class ShellExec {
         String ip = "192.168.0.153";
         String username = "root";
         String passwd = "123456";
-        String cmd = "top ";
+        String cmd = "kubectl get pods -n k8s-test ";
         StringBuilder result = execute(username,passwd,ip,cmd);
         System.out.println(result.toString());
 //        Arrays.stream(getEndPoints(result)).forEach(n->{

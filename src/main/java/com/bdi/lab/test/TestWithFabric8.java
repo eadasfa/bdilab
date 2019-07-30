@@ -14,8 +14,31 @@ import java.util.Map;
 public class TestWithFabric8 {
     private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) throws InterruptedException {
-        IstioClient client = new DefaultIstioClient();
+//        System.out.println(_kube.services().list().getItems().get(0));
 
+//        _kube.pods().inNamespace("k8s-test").withLabel("myweb").
+//        Map<String,String> map = new HashMap<>();
+//        map.put("app","myweb");
+//        map.put("version","v1");
+//        _kube.replicationControllers().inNamespace("k8s-test").withName("myweb")
+//                .edit()
+//                    .editSpec()
+//                        .withSelector(map)
+//                    .endSpec()
+//                .done();
+        changeReplicas("k8s-test","myweb",3);
+    }
+    public static void changeLabelsInRc(String namespace,String name,Map<String,String> labels){
+        _kube.replicationControllers().inNamespace(namespace).withName(name)
+                .edit()
+                .editSpec()
+                .editTemplate()
+                .editMetadata()
+                .addToLabels(labels)
+                .endMetadata()
+                .endTemplate()
+                .endSpec()
+                .done();
     }
     public static int getReplicas(String namespace, String RcName){
         return _kube.replicationControllers().inNamespace(namespace).withName(RcName)
