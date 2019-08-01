@@ -14,14 +14,37 @@ import static com.bdi.lab.utils.Common.*;
 
 public class TestIstio {
     public static void main(String[] args){
-//        System.out.println(_istio.destinationRule().inNamespace("k8s-test").withName("myweb").get());
-////        createDR();
-        _istio.virtualService().inNamespace("k8s-test").create(newInstance());
+//        System.out.println(_istio.destinationRule().inNamespace("k8s-test").withName("helloworld").get());
+//        _kube.services().inNamespace("k8s-test").withName("helloworld").delete();
+//        System.out.println(_istio.virtualService().inNamespace("k8s-test").withName("helloworld").get());
+//        _istio.destinationRule().inNamespace("k8s-test").withName("helloworld").delete();
+        createDR();
+//        _istio.virtualService().inNamespace("k8s-test").create(newInstance());
+//        showWeight();
+
+    }
+    public static void changeWeight(String namespace, String name,Integer v1Weight,Integer v2Weight){
+        _istio.virtualService().inNamespace(namespace).withName(name)
+                .edit()
+                .editSpec()
+                .editFirstHttp()
+                .editFirstRoute()
+                .withWeight(v1Weight)
+                .endRoute()
+                .editRoute(1)
+                .withWeight(v2Weight)
+                .endRoute().endHttp().endSpec().done();
+    }
+    public static void showWeight(){
+        _istio.virtualService().inNamespace(("k8s-test")).list().getItems().get(0).getSpec().getHttp()
+                .get(0).getRoute().forEach(n->{
+            System.out.println(n.getWeight());
+        });
     }
     public static void createDR(){
         DestinationRule dr = new DestinationRule();
         ObjectMeta om = new ObjectMeta();
-        om.setName("myweb");
+        om.setName("helloworld");
         dr.setMetadata(om);
 
         List<Subset> subsetList = new ArrayList<>();
@@ -32,14 +55,14 @@ public class TestIstio {
         v1.setLabels(v1map);
         Subset v2 = new Subset();
         Map<String,String>  v2map = new HashMap<>();
-        v1map.put("version","v2");
+        v2map.put("version","v2");
         v2.setName("v2");
         v2.setLabels(v2map);
         subsetList.add(v1);
         subsetList.add(v2);
 
         DestinationRuleSpec drs = new DestinationRuleSpec();
-        drs.setHost("myweb");
+        drs.setHost("helloworld");
         drs.setSubsets(subsetList);
         dr.setSpec(drs);
 
@@ -48,19 +71,19 @@ public class TestIstio {
     public static VirtualService newInstance(){
         VirtualService virtualService=new VirtualService();
         ObjectMeta mata=new ObjectMeta();
-        mata.setName("myweb");
+        mata.setName("helloworld");
         virtualService.setMetadata(mata);
         VirtualServiceSpec spec=new VirtualServiceSpec();
         List<String> hostList=new ArrayList<String>();
-        hostList.add("myweb");
+        hostList.add("helloworld");
         spec.setHosts(hostList);
         List<HTTPRoute> httpRouteList=new ArrayList<HTTPRoute>();
         List<HTTPRouteDestination> httpRouteDestinationList=new ArrayList<HTTPRouteDestination>();
         Destination destination=new Destination();
-        destination.setHost("myweb");
+        destination.setHost("helloworld");
         destination.setSubset("v1");
         Destination destination2=new Destination();
-        destination2.setHost("myweb");
+        destination2.setHost("helloworld");
         destination2.setSubset("v2");
         httpRouteDestinationList.add(new HTTPRouteDestination());
         httpRouteDestinationList.add(new HTTPRouteDestination());
