@@ -16,33 +16,37 @@ public class TestIstio {
 //        System.out.println(_istio.destinationRule().inNamespace("k8s-test").withName("helloworld").get());
 //        _kube.services().inNamespace("k8s-test").withName("helloworld").delete();
 //        System.out.println(_istio.virtualService().inNamespace("k8s-test").withName("helloworld").get());
-//        _istio.destinationRule().inNamespace("k8s-test").withName("helloworld").delete();
+//        _istio.destinationRule().inNamespace(namespace).withName("helloworld").delete();
+//        _istio.virtualService().inNamespace(namespace).withName("helloworld").delete();
 //        createDR();
 //        _istio.virtualService().inNamespace("default").create(newInstance());
-        showWeight();
-
-        changeWeight(namespace,"reviews", Arrays.asList(45,60,80));
+//        showWeight();
+//
+        changeWeight(namespace,"reviews", new Integer[]{1,4,3});
 
     }
-    public static void changeWeight(String namespace, String name,List<Integer> weights){
+    public static boolean changeWeight(String namespace, String name,Integer[] weights){
         VirtualServiceSpecFluent.HttpNested<VirtualServiceFluent.SpecNested<DoneableVirtualService>>
                 http = _istio.virtualService().inNamespace(namespace).withName(name)
                 .edit()
                 .editSpec()
                 .editFirstHttp();
         int routeSize = http.getRoute().size();
-        int sum = 0;
+        int arraySum = 0;
+        for(Integer n :weights) arraySum += n;
+        if(arraySum<=0) return false;
+        int tempSum = 0;
         for(int i=0;i<routeSize;i++){
-            int weight=0;
-            if(i<weights.size()) weight = weights.get(i);
-            if(i==routeSize-1) weight = 100-sum;
-            else if(sum+weight>100) weight = 100-sum;
+            int weight= (int)((1.0*weights[i]/arraySum) * 100);
+            if(i==routeSize-1) weight = 100-tempSum;
             http = http.editRoute(i)
                     .withWeight(weight)
                     .endRoute();
-            sum += weight;
+            System.out.println(weight);
+            tempSum += weight;
         }
         http.endHttp().endSpec().done();
+        return true;
     }
     public static void showWeight(){
         _istio.virtualService().inNamespace(namespace).list().getItems().get(0).getSpec().getHttp()
