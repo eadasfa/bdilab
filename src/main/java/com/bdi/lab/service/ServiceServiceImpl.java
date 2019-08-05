@@ -5,15 +5,20 @@ import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
+import me.snowdrop.istio.api.networking.v1alpha3.DoneableVirtualService;
+import me.snowdrop.istio.api.networking.v1alpha3.VirtualServiceFluent;
+import me.snowdrop.istio.api.networking.v1alpha3.VirtualServiceSpecFluent;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bdi.lab.utils.Common._istio;
+
 @Service
 public class ServiceServiceImpl implements ServiceService {
 
-    private static final String NAMESPACE = "k8s-test";
+    private static final String NAMESPACE = "default";
     private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) {
 //        ServiceServiceImpl s = new ServiceServiceImpl();
@@ -130,5 +135,35 @@ public class ServiceServiceImpl implements ServiceService {
         resultMap.put("code","1");
         return resultMap;
 
+    }
+
+    @Override
+    public int getVersionSize(String serviceName) {
+        return _istio.virtualService().inNamespace(NAMESPACE).withName(serviceName)
+                .get().getSpec().getHttp().get(0).getRoute().size();
+    }
+
+    @Override
+    public boolean changeWeight(String serviceName, List<Integer> weights) {
+        VirtualServiceSpecFluent.HttpNested<VirtualServiceFluent.SpecNested<DoneableVirtualService>>
+                http = _istio.virtualService().inNamespace(NAMESPACE).withName(serviceName)
+                .edit()
+                .editSpec()
+                .editFirstHttp();
+        int arraySum = 0;
+        for(Integer n :weights) arraySum += n;
+        int routeSize = http.getRoute().size();
+        if(arraySum<=0) return false;
+        int tempSum = 0;
+        for(int i=0;i<routeSize;i++){
+            int weight= (int)((1.0*weights.get(i)/arraySum) * 100);
+            if(i==routeSize-1) weight = 100-tempSum;
+            http = http.editRoute(i)
+                    .withWeight(weight)
+                    .endRoute();
+            tempSum += weight;
+        }
+        http.endHttp().endSpec().done();
+        return true;
     }
 }

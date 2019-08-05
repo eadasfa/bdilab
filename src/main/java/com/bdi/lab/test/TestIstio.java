@@ -1,5 +1,6 @@
 package com.bdi.lab.test;
 
+import com.bdi.lab.service.ServiceServiceImpl;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ReplicationControllerFluent;
 import me.snowdrop.istio.api.networking.v1alpha3.*;
@@ -22,31 +23,8 @@ public class TestIstio {
 //        _istio.virtualService().inNamespace("default").create(newInstance());
 //        showWeight();
 //
-        changeWeight(namespace,"reviews", new Integer[]{1,4,3});
+        new ServiceServiceImpl().changeWeight("reviews", Arrays.asList(1,2,3));
 
-    }
-    public static boolean changeWeight(String namespace, String name,Integer[] weights){
-        VirtualServiceSpecFluent.HttpNested<VirtualServiceFluent.SpecNested<DoneableVirtualService>>
-                http = _istio.virtualService().inNamespace(namespace).withName(name)
-                .edit()
-                .editSpec()
-                .editFirstHttp();
-        int routeSize = http.getRoute().size();
-        int arraySum = 0;
-        for(Integer n :weights) arraySum += n;
-        if(arraySum<=0) return false;
-        int tempSum = 0;
-        for(int i=0;i<routeSize;i++){
-            int weight= (int)((1.0*weights[i]/arraySum) * 100);
-            if(i==routeSize-1) weight = 100-tempSum;
-            http = http.editRoute(i)
-                    .withWeight(weight)
-                    .endRoute();
-            System.out.println(weight);
-            tempSum += weight;
-        }
-        http.endHttp().endSpec().done();
-        return true;
     }
     public static void showWeight(){
         _istio.virtualService().inNamespace(namespace).list().getItems().get(0).getSpec().getHttp()

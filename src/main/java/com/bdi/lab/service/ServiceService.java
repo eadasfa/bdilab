@@ -24,4 +24,9 @@ public interface ServiceService {
                                              String name,Integer Port,
                                              Integer nodePort,Map<String,String> lables);
 
+    public int getVersionSize(String serviceName);
+
+    public boolean changeWeight(String serviceName,List<Integer> weights);
+
+
 }

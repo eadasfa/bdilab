@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -66,6 +67,19 @@ public class ServiceController {
                 service.createService(namespace,selectorMap,type,name,port,nodePort,labelsMap)
         );
     }
+
+    @GetMapping("/getVersionSize/{serviceName}")
+    public ResponseEntity getVersionSize(@PathVariable("serviceName") String serviceName){
+        return ResponseEntity.ok(service.getVersionSize(serviceName));
+    }
+
+    @PostMapping("/changeWeight")
+    public ResponseEntity changeWeight(@RequestBody Map<String,Object> params){
+        String serviceName = (String)params.get("name");
+        List<Integer> weights = (List<Integer>)params.get("weights");
+        return ResponseEntity.ok("code:"+(service.changeWeight(serviceName,weights)?1:0));
+    }
+
 
 
 
