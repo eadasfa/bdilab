@@ -1,42 +1,51 @@
 package com.bdi.lab.test;
 
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ReplicationControllerFluent;
 import me.snowdrop.istio.api.networking.v1alpha3.*;
 import me.snowdrop.istio.client.DefaultIstioClient;
 import me.snowdrop.istio.client.IstioClient;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.bdi.lab.utils.Common.*;
 
 public class TestIstio {
+    public static String namespace = "default";
     public static void main(String[] args){
 //        System.out.println(_istio.destinationRule().inNamespace("k8s-test").withName("helloworld").get());
 //        _kube.services().inNamespace("k8s-test").withName("helloworld").delete();
 //        System.out.println(_istio.virtualService().inNamespace("k8s-test").withName("helloworld").get());
 //        _istio.destinationRule().inNamespace("k8s-test").withName("helloworld").delete();
-        createDR();
-//        _istio.virtualService().inNamespace("k8s-test").create(newInstance());
-//        showWeight();
+//        createDR();
+//        _istio.virtualService().inNamespace("default").create(newInstance());
+        showWeight();
+
+        changeWeight(namespace,"reviews", Arrays.asList(45,60,80));
 
     }
-    public static void changeWeight(String namespace, String name,Integer v1Weight,Integer v2Weight){
-        _istio.virtualService().inNamespace(namespace).withName(name)
+    public static void changeWeight(String namespace, String name,List<Integer> weights){
+        VirtualServiceSpecFluent.HttpNested<VirtualServiceFluent.SpecNested<DoneableVirtualService>>
+                http = _istio.virtualService().inNamespace(namespace).withName(name)
                 .edit()
                 .editSpec()
-                .editFirstHttp()
-                .editFirstRoute()
-                .withWeight(v1Weight)
-                .endRoute()
-                .editRoute(1)
-                .withWeight(v2Weight)
-                .endRoute().endHttp().endSpec().done();
+                .editFirstHttp();
+        int routeSize = http.getRoute().size();
+        int sum = 0;
+        for(int i=0;i<routeSize;i++){
+            int weight=0;
+            if(i<weights.size()) weight = weights.get(i);
+            if(i==routeSize-1) weight = 100-sum;
+            else if(sum+weight>100) weight = 100-sum;
+            http = http.editRoute(i)
+                    .withWeight(weight)
+                    .endRoute();
+            sum += weight;
+        }
+        http.endHttp().endSpec().done();
     }
     public static void showWeight(){
-        _istio.virtualService().inNamespace(("k8s-test")).list().getItems().get(0).getSpec().getHttp()
+        _istio.virtualService().inNamespace(namespace).list().getItems().get(0).getSpec().getHttp()
                 .get(0).getRoute().forEach(n->{
             System.out.println(n.getWeight());
         });
@@ -66,7 +75,7 @@ public class TestIstio {
         drs.setSubsets(subsetList);
         dr.setSpec(drs);
 
-        _istio.destinationRule().inNamespace("k8s-test").create(dr);
+        _istio.destinationRule().inNamespace(namespace).create(dr);
     }
     public static VirtualService newInstance(){
         VirtualService virtualService=new VirtualService();

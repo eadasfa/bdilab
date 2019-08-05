@@ -26,7 +26,7 @@ public class TestWithFabric8 {
 //                        .withSelector(map)
 //                    .endSpec()
 //                .done();
-        changeReplicas("k8s-test","myweb",3);
+        changeReplicas("default","helloworld-v1",2);
     }
     public static void changeLabelsInRc(String namespace,String name,Map<String,String> labels){
         _kube.replicationControllers().inNamespace(namespace).withName(name)
