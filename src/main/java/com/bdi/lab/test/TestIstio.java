@@ -2,6 +2,7 @@ package com.bdi.lab.test;
 
 import com.bdi.lab.service.ServiceServiceImpl;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.ReplicationControllerFluent;
 import me.snowdrop.istio.api.networking.v1alpha3.*;
 import me.snowdrop.istio.client.DefaultIstioClient;
@@ -21,9 +22,10 @@ public class TestIstio {
 //        _istio.virtualService().inNamespace(namespace).withName("helloworld").delete();
 //        createDR();
 //        _istio.virtualService().inNamespace("default").create(newInstance());
-        showWeight();
+       // showWeight();
 //
 //        new ServiceServiceImpl().changeWeight("reviews", Arrays.asList(1,2,3));
+
 
     }
     public static void showWeight(){

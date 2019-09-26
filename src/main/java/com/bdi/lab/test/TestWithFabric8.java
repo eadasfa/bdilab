@@ -14,21 +14,17 @@ import java.util.Map;
 public class TestWithFabric8 {
     private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) throws InterruptedException {
-//        System.out.println(_kube.services().list().getItems().get(0));
+//        _kube.apps().replicaSets().inNamespace("default").withName("ratings-v1-858fb7569b").edit().editSpec().editTemplate().editSpec().withNewPriorityClassName("high-priority")
+//        .endSpec()
+//                .endTemplate()
+//                .endSpec().done();
+        _kube.apps().deployments().inNamespace("default").withName("reviews-v2").edit().editSpec().editTemplate().editSpec()
+                .withNewPriorityClassName("high-priority")
+                .endSpec()
+                .endTemplate()
+                .endSpec()
+                .done();
 
-//        _kube.pods().inNamespace("default").list().getItems().forEach(n->System.out.println(n));
-//        Map<String,String> map = new HashMap<>();
-//        map.put("app","myweb");
-//        map.put("version","v1");
-//        _kube.replicationControllers().inNamespace("k8s-test").withName("myweb")
-//                .edit()
-//                    .editSpec()
-//                        .withSelector(map)
-//                    .endSpec()
-//                .done();
-//        changeReplicas("default","helloworld-v1",2);
-
-        _kube.namespaces().list().getItems().forEach(n->System.out.println(n.getMetadata().getName()));
     }
     public static void changeLabelsInRc(String namespace,String name,Map<String,String> labels){
         _kube.replicationControllers().inNamespace(namespace).withName(name)
@@ -81,5 +77,19 @@ public class TestWithFabric8 {
             map.put(po.getMetadata().getName(),po.getStatus().getPhase());
         }
         return map;
+    }
+    public static void change_priority(String namespace,String name,String priorityName){
+        _kube.apps().deployments()
+                .inNamespace(namespace)
+                .withName(name)
+                .edit()
+                .editSpec()
+                .editTemplate()
+                .editSpec()
+                .withNewPriorityClassName(priorityName)
+                .endSpec()
+                .endTemplate()
+                .endSpec()
+                .done();
     }
 }
