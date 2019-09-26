@@ -21,13 +21,13 @@ public class TestIstio {
 //        _istio.virtualService().inNamespace(namespace).withName("helloworld").delete();
 //        createDR();
 //        _istio.virtualService().inNamespace("default").create(newInstance());
-//        showWeight();
+        showWeight();
 //
-        new ServiceServiceImpl().changeWeight("reviews", Arrays.asList(1,2,3));
+//        new ServiceServiceImpl().changeWeight("reviews", Arrays.asList(1,2,3));
 
     }
     public static void showWeight(){
-        _istio.virtualService().inNamespace(namespace).list().getItems().get(0).getSpec().getHttp()
+        _istio.virtualService().inNamespace(namespace).list().getItems().get(1).getSpec().getHttp()
                 .get(0).getRoute().forEach(n->{
             System.out.println(n.getWeight());
         });

@@ -16,7 +16,7 @@ public class TestWithFabric8 {
     public static void main(String[] args) throws InterruptedException {
 //        System.out.println(_kube.services().list().getItems().get(0));
 
-//        _kube.pods().inNamespace("k8s-test").withLabel("myweb").
+//        _kube.pods().inNamespace("default").list().getItems().forEach(n->System.out.println(n));
 //        Map<String,String> map = new HashMap<>();
 //        map.put("app","myweb");
 //        map.put("version","v1");
@@ -26,7 +26,9 @@ public class TestWithFabric8 {
 //                        .withSelector(map)
 //                    .endSpec()
 //                .done();
-        changeReplicas("default","helloworld-v1",2);
+//        changeReplicas("default","helloworld-v1",2);
+
+        _kube.namespaces().list().getItems().forEach(n->System.out.println(n.getMetadata().getName()));
     }
     public static void changeLabelsInRc(String namespace,String name,Map<String,String> labels){
         _kube.replicationControllers().inNamespace(namespace).withName(name)
