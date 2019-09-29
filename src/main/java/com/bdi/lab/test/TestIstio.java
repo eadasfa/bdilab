@@ -29,18 +29,21 @@ public class TestIstio {
 //                .endSpec()
 //                .done();
 
-        _istio.destinationRule().inNamespace(namespace).withName("productpage")
-                .edit()
-                .editSpec()
-                .editOrNewTrafficPolicy()
-                .editOrNewOutlierDetection()
-                .editOrNewBaseEjectionTime()
-                .withSeconds(180L)
-                .and()
-                .endOutlierDetection()
-                .endTrafficPolicy()
-                .endSpec()
-                .done();
+//        _istio.destinationRule().inNamespace(namespace).withName("productpage")
+//                .edit()
+//                .editSpec()
+//                .editOrNewTrafficPolicy()
+//                .withOutlierDetection(null)
+//                .editOrNewOutlierDetection()
+//                .editOrNewBaseEjectionTime()
+//                .withSeconds(180L)
+//                .and()
+//                .endOutlierDetection()
+//                .endTrafficPolicy()
+//                .endSpec()
+//                .done();
+        setMaxConnection("default", "productpage",3,3,200,3);
+
     }
     public static void showWeight(){
         _istio.virtualService().inNamespace(namespace).list().getItems().get(1).getSpec().getHttp()
@@ -98,11 +101,43 @@ public class TestIstio {
         httpRouteDestinationList.get(1).setDestination(destination2);
         httpRouteList.add(new HTTPRoute());
         httpRouteList.get(0).setRoute(httpRouteDestinationList);
-        httpRouteDestinationList.get(0).setWeight(75);
+        httpRouteDestinationList.get(0).setWeight(75);f
         httpRouteDestinationList.get(1).setWeight(25);
         spec.setHttp(httpRouteList);
         virtualService.setSpec(spec);
 
         return virtualService;
+    }
+
+    /**
+     *
+     * @param namespace
+     * @param destinationRuleName
+     * @param maxConnection 最大连接数
+     * @param maxRequestsPerConnection 每一个连接最大请求
+     * @param maxRequests 最大请求
+     * @param maxPendingRequests
+     * @return
+     */
+    public  static boolean setMaxConnection(String namespace, String destinationRuleName, int maxConnection,
+                                     int maxRequestsPerConnection, int maxRequests,int maxPendingRequests){
+        _istio.destinationRule().inNamespace(namespace).withName(destinationRuleName)
+                .edit()
+                .editSpec()
+                .editTrafficPolicy()
+                .editConnectionPool()
+                .editHttp()
+                .withHttp1MaxPendingRequests(maxPendingRequests)
+                .withHttp2MaxRequests(maxRequests)
+                .withMaxRequestsPerConnection(maxRequestsPerConnection)
+                .endHttp()
+                .editTcp()
+                .withMaxConnections(maxConnection)
+                .endTcp()
+                .endConnectionPool()
+                .endTrafficPolicy()
+                .endSpec()
+                .done();
+        return true;
     }
 }
