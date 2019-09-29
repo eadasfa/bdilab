@@ -15,18 +15,32 @@ import static com.bdi.lab.utils.Common.*;
 public class TestIstio {
     public static String namespace = "default";
     public static void main(String[] args){
-//        System.out.println(_istio.destinationRule().inNamespace("k8s-test").withName("helloworld").get());
-//        _kube.services().inNamespace("k8s-test").withName("helloworld").delete();
-//        System.out.println(_istio.virtualService().inNamespace("k8s-test").withName("helloworld").get());
-//        _istio.destinationRule().inNamespace(namespace).withName("helloworld").delete();
-//        _istio.virtualService().inNamespace(namespace).withName("helloworld").delete();
-//        createDR();
-//        _istio.virtualService().inNamespace("default").create(newInstance());
-       // showWeight();
-//
-//        new ServiceServiceImpl().changeWeight("reviews", Arrays.asList(1,2,3));
 
+//        _istio.destinationRule().inNamespace(namespace).withName("productpage")
+//                .edit()
+//                .editSpec()
+//                .editOrNewTrafficPolicy()
+//                .editOrNewConnectionPool()
+//                .editOrNewTcp()
+//                .withMaxConnections(1)
+//                .endTcp()
+//                .endConnectionPool()
+//                .endTrafficPolicy()
+//                .endSpec()
+//                .done();
 
+        _istio.destinationRule().inNamespace(namespace).withName("productpage")
+                .edit()
+                .editSpec()
+                .editOrNewTrafficPolicy()
+                .editOrNewOutlierDetection()
+                .editOrNewBaseEjectionTime()
+                .withSeconds(180L)
+                .and()
+                .endOutlierDetection()
+                .endTrafficPolicy()
+                .endSpec()
+                .done();
     }
     public static void showWeight(){
         _istio.virtualService().inNamespace(namespace).list().getItems().get(1).getSpec().getHttp()
@@ -87,7 +101,6 @@ public class TestIstio {
         httpRouteDestinationList.get(0).setWeight(75);
         httpRouteDestinationList.get(1).setWeight(25);
         spec.setHttp(httpRouteList);
-
         virtualService.setSpec(spec);
 
         return virtualService;

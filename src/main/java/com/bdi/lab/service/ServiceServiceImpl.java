@@ -25,6 +25,7 @@ public class ServiceServiceImpl implements ServiceService {
 //        Map<String,String> map = new HashMap<>();
 //        map.put("app","myweb");
 //        s.createService(NAMESPACE,map,"NodePort","myweb",8080,30001);
+
     }
     @Override
     public Map<String, String> getServiceName() {

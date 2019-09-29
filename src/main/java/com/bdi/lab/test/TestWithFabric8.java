@@ -18,12 +18,13 @@ public class TestWithFabric8 {
 //        .endSpec()
 //                .endTemplate()
 //                .endSpec().done();
-        _kube.apps().deployments().inNamespace("default").withName("reviews-v2").edit().editSpec().editTemplate().editSpec()
-                .withNewPriorityClassName("high-priority")
-                .endSpec()
-                .endTemplate()
-                .endSpec()
-                .done();
+//        _kube.apps().deployments().inNamespace("default").withName("reviews-v2").edit().editSpec().editTemplate().editSpec()
+////                .withNewPriorityClassName("high-priority")
+////                .endSpec()
+////                .endTemplate()
+////                .endSpec()
+////                .done();
+        change_priority("default","reviews-v2","medium-priority");
 
     }
     public static void changeLabelsInRc(String namespace,String name,Map<String,String> labels){
