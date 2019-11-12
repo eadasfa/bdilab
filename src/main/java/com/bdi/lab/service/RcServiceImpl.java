@@ -3,10 +3,13 @@ package com.bdi.lab.service;
 import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.ReplicationController;
 import io.fabric8.kubernetes.api.model.ReplicationControllerBuilder;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RcServiceImpl implements RcService {
+
     @Override
     public ReplicationController createRC(String rcName, String nsName, String lbkey, String lbvalue, int replicas, String ctName, String imName, int cnPort) {
         ReplicationController rc = new ReplicationControllerBuilder()
@@ -45,6 +48,47 @@ public class RcServiceImpl implements RcService {
         }
         return rc;
     }
+    @Override
+    public Deployment createDeployment(String rcName, String nsName, String lbkey, String lbvalue, int replicas, String ctName, String imName, int cnPort){
+        Deployment deployment = new DeploymentBuilder()
+                .withNewMetadata()
+                .withName(rcName)
+                .withNamespace(nsName)
+                .addToLabels(lbkey, lbvalue)
+                .endMetadata()
+                .withNewSpec()
+                .withReplicas(replicas)
+                .withNewSelector()
+                //
+                .addToMatchLabels(lbkey,lbvalue)
+                .endSelector()
+                .withNewTemplate()
+                .withNewMetadata()
+                //
+                .addToLabels(lbkey, lbvalue)
+                .endMetadata()
+                .withNewSpec()
+                .addNewContainer()
+                .withName(ctName)
+                .withImage(imName)
+                .withImagePullPolicy("IfNotPresent")
+                .addNewPort()
+                .withContainerPort(cnPort)
+                .endPort()
+                .endContainer()
+                .endSpec()
+                .endTemplate()
+                .endSpec()
+                .build();
+        try {
+            Common._kube.apps().deployments().create(deployment);
+            System.out.println("replication controller create success");
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("replication controller create failed");
+        }
+        return deployment;
+    }
 
     @Override
     public ReplicationController deleteRC(String nsName, String rcName) {
@@ -65,6 +109,18 @@ public class RcServiceImpl implements RcService {
         ReplicationController rc = new ReplicationController();
         try {
             rc = Common._kube.replicationControllers().inNamespace(nsName).withName(rcName).get();
+            System.out.println("replication controller read success");
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("replication controller read failed");
+        }
+        return rc;
+    }
+    @Override
+    public Deployment readDP(String nsName, String rcName) {
+        Deployment rc = new Deployment();
+        try {
+            rc = Common._kube.apps().deployments().inNamespace(nsName).withName(rcName).get();
             System.out.println("replication controller read success");
         }catch (Exception e){
             e.printStackTrace();

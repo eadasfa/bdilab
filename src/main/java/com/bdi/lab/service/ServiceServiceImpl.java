@@ -3,6 +3,7 @@ import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import me.snowdrop.istio.api.networking.v1alpha3.DoneableVirtualService;
@@ -20,11 +21,12 @@ public class ServiceServiceImpl implements ServiceService {
     private static final String NAMESPACE = "default";
     private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) {
-//        ServiceServiceImpl s = new ServiceServiceImpl();
+        ServiceServiceImpl s = new ServiceServiceImpl();
 //        Map<String,String> map = new HashMap<>();
 //        map.put("app","myweb");
 //        s.createService(NAMESPACE,map,"NodePort","myweb",8080,30001);
-
+//        s.stopService("equipment");
+        s.startService("equipment",1);
     }
     @Override
     public List<Map<String, Object>> getServiceName() {
@@ -75,15 +77,24 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public void updateReplicas(String namespace, String RcName, int num ){
-        _kube .replicationControllers()
+    public void updateReplicas(String namespace, String serviceName, int num ){
+
+        _kube .apps().deployments()
                 .inNamespace(namespace )
-                .withName(RcName )
+                .withName(serviceName )
                 .edit()
-                    .editSpec()
-                        .withReplicas(num)
-                    .endSpec()
+                .editSpec()
+                .withReplicas(num)
+                .endSpec()
                 .done() ;
+//        _kube .replicationControllers()
+//                .inNamespace(namespace )
+//                .withName(serviceName )
+//                .edit()
+//                    .editSpec()
+//                        .withReplicas(num)
+//                    .endSpec()
+//                .done() ;
     }
 
     @Override
@@ -94,7 +105,11 @@ public class ServiceServiceImpl implements ServiceService {
             resultMap.put("code","0");
             return resultMap;
         }
-        this.updateReplicas(NAMESPACE,serviceName,0);
+        List<Deployment> deployments= _kube.apps().deployments().inNamespace(NAMESPACE)
+                .withLabel("app",serviceName).list().getItems();
+        for(Deployment dp : deployments){
+            this.updateReplicas(NAMESPACE,dp.getMetadata().getName(),0);
+        }
         resultMap.put("code","1");
         return resultMap;
     }
@@ -112,7 +127,11 @@ public class ServiceServiceImpl implements ServiceService {
             resultMap.put("code","0");
             return resultMap;
         }
-        this.updateReplicas(NAMESPACE ,serviceName ,num);
+        List<Deployment> deployments= _kube.apps().deployments().inNamespace(NAMESPACE)
+                .withLabel("app",serviceName).list().getItems();
+        for(Deployment dp : deployments){
+            this.updateReplicas(NAMESPACE,dp.getMetadata().getName(),num);
+        }
         resultMap.put("code","1");
         return resultMap;
     }
@@ -145,6 +164,7 @@ public class ServiceServiceImpl implements ServiceService {
     public int getVersionSize(String serviceName) {
         return _istio.virtualService().inNamespace(NAMESPACE).withName(serviceName)
                 .get().getSpec().getHttp().get(0).getRoute().size();
+
     }
 
     @Override
