@@ -1,16 +1,13 @@
 package com.bdi.lab.test;
-
 import com.bdi.lab.apiclient.RestfulClient;
 import com.bdi.lab.apiclient.imp.JerseyRestfulClient;
 import com.bdi.lab.apiclient.imp.Params;
 import com.bdi.lab.apiclient.imp.ResourceType;
 import com.bdi.lab.utils.JsonUtil;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class TestApi {
     RestfulClient restfulClient;
     public TestApi(){

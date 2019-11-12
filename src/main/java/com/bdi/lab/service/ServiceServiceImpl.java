@@ -3,6 +3,7 @@ package com.bdi.lab.service;
 import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import me.snowdrop.istio.api.networking.v1alpha3.DoneableVirtualService;
@@ -59,7 +60,7 @@ public class ServiceServiceImpl implements ServiceService {
             pod.getStatus().getContainerStatuses().get(0).getState();
             List<ContainerStatus> containers = pod.getStatus().getContainerStatuses();
             for(ContainerStatus c:containers){
-                if(c.getName().equals(serviceName)&&c.getState().getRunning()!=null){
+                if(c.getState().getRunning()!=null){
                     flag=true;
                     break lable;
                 }
@@ -166,5 +167,35 @@ public class ServiceServiceImpl implements ServiceService {
         }
         http.endHttp().endSpec().done();
         return true;
+    }
+   /**
+    * 新的服务创建
+   * */
+    public static io.fabric8.kubernetes.api.model.Service createService(String seriveName, String nsName, String labelkey, String labelvalue, int cnPort, int nodePort){
+        io.fabric8.kubernetes.api.model.Service service = new ServiceBuilder()
+                .withApiVersion("v1")
+                .withKind("Service")
+                .withNewMetadata()
+                .withName(seriveName)
+                .withNamespace(nsName)
+                .addToLabels(labelkey, labelvalue)
+                .endMetadata()
+                .withNewSpec()
+                .addNewPort()
+                .withPort(cnPort)
+                .withNodePort(nodePort)
+                .endPort()
+                .withType("NodePort")
+                .addToSelector(labelkey,labelvalue)
+                .endSpec()
+                .build();
+        try {
+            _kube.services().create(service);
+            System.out.println("service create success");
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("service create failed");
+        }
+        return service;
     }
 }

@@ -101,7 +101,7 @@ public class TestIstio {
         httpRouteDestinationList.get(1).setDestination(destination2);
         httpRouteList.add(new HTTPRoute());
         httpRouteList.get(0).setRoute(httpRouteDestinationList);
-        httpRouteDestinationList.get(0).setWeight(75);f
+        httpRouteDestinationList.get(0).setWeight(75);
         httpRouteDestinationList.get(1).setWeight(25);
         spec.setHttp(httpRouteList);
         virtualService.setSpec(spec);
