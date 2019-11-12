@@ -39,8 +39,7 @@ public class ReplicationController {
     * */
 
     @RequestMapping(value = "/readrc", method = RequestMethod.GET)
-    public ResponseEntity readk8src(@RequestParam(value = "NamespaceName") String nsName,
-                                           @RequestParam(value = "ReplicationControllerName") String rcName){
-        return ResponseEntity.ok(rcService.readRC(nsName, rcName));
+    public ResponseEntity readk8src(@RequestParam(value = "rcName") String rcName){
+        return ResponseEntity.ok(rcService.readRC("default", rcName));
     }
 }

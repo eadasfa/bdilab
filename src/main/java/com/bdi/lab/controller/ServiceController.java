@@ -116,12 +116,10 @@ public class ServiceController {
    * */
     @RequestMapping(value = "/createservice", method = RequestMethod.POST)
     public ResponseEntity createk8sservice(@RequestParam(value = "srName") String srName,
-                                    @RequestParam(value = "nsName") String nsName,
                                     @RequestParam(value = "lbkey") String lbkey,
                                     @RequestParam(value = "lbvalue") String lbvalue,
-                                    @RequestParam(value = "cnPort") int cnPort,
-                                    @RequestParam(value = "ndPort") int ndPort){
-        return ResponseEntity.ok(ServiceServiceImpl.createService(srName, nsName, lbkey, lbvalue, cnPort, ndPort));
+                                    @RequestParam(value = "cnPort") int cnPort){
+        return ResponseEntity.ok(ServiceServiceImpl.createService(srName, "default", lbkey, lbvalue, cnPort));
     }
 
 

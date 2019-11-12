@@ -1,5 +1,4 @@
 package com.bdi.lab.service;
-
 import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -10,12 +9,11 @@ import me.snowdrop.istio.api.networking.v1alpha3.DoneableVirtualService;
 import me.snowdrop.istio.api.networking.v1alpha3.VirtualServiceFluent;
 import me.snowdrop.istio.api.networking.v1alpha3.VirtualServiceSpecFluent;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static com.bdi.lab.utils.Common._istio;
-
 @Service
 public class ServiceServiceImpl implements ServiceService {
 
@@ -29,13 +27,18 @@ public class ServiceServiceImpl implements ServiceService {
 
     }
     @Override
-    public Map<String, String> getServiceName() {
-        Map<String, String> serviceMap = new HashMap<>();
+    public List<Map<String, Object>> getServiceName() {
+        List<Map<String,Object>> serviceList = new ArrayList<>();
         _kube.services().inNamespace(NAMESPACE).list().getItems().forEach(n->{
-            if(!n.getMetadata().getName().equals("kubernetes"))
-                serviceMap.put(n.getMetadata().getName(),getState(n.getMetadata().getName()));
+            if(!n.getMetadata().getName().equals("kubernetes")) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("name",n.getMetadata().getName());
+                //map.put("version",getVersionSize(n.getMetadata().getName()));
+                map.put("state",getState(n.getMetadata().getName()));
+                serviceList.add(map);
+            }
         });
-        return serviceMap;
+        return serviceList;
     }
 
     @Override
@@ -69,8 +72,8 @@ public class ServiceServiceImpl implements ServiceService {
         if(flag)
             return "Running";
         return "Terminated";
-
     }
+
     @Override
     public void updateReplicas(String namespace, String RcName, int num ){
         _kube .replicationControllers()
@@ -136,7 +139,6 @@ public class ServiceServiceImpl implements ServiceService {
         }
         resultMap.put("code","1");
         return resultMap;
-
     }
 
     @Override
@@ -171,7 +173,7 @@ public class ServiceServiceImpl implements ServiceService {
    /**
     * 新的服务创建
    * */
-    public static io.fabric8.kubernetes.api.model.Service createService(String seriveName, String nsName, String labelkey, String labelvalue, int cnPort, int nodePort){
+    public static io.fabric8.kubernetes.api.model.Service createService(String seriveName, String nsName, String labelkey, String labelvalue, int cnPort){
         io.fabric8.kubernetes.api.model.Service service = new ServiceBuilder()
                 .withApiVersion("v1")
                 .withKind("Service")
@@ -183,7 +185,6 @@ public class ServiceServiceImpl implements ServiceService {
                 .withNewSpec()
                 .addNewPort()
                 .withPort(cnPort)
-                .withNodePort(nodePort)
                 .endPort()
                 .withType("NodePort")
                 .addToSelector(labelkey,labelvalue)
