@@ -14,7 +14,7 @@ public class ReplicationController {
     RcService rcService;
     /**
      * k8s rc create
-    * */
+     * */
     @RequestMapping(value = "/createrc", method = RequestMethod.POST)
     public ResponseEntity createk8src(@RequestParam(value = "rcName") String rcName,
                                       @RequestParam(value = "nsName") String nsName,
