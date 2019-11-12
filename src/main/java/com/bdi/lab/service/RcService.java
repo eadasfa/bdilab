@@ -29,5 +29,6 @@ public interface RcService {
     ReplicationController deleteRC(String nsName, String rcName);
     //查询Replication Controller
     ReplicationController readRC(String nsName, String rcName);
+    Deployment readDP(String nsName, String rcName) ;
 
 }

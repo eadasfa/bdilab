@@ -116,4 +116,16 @@ public class RcServiceImpl implements RcService {
         }
         return rc;
     }
+    @Override
+    public Deployment readDP(String nsName, String rcName) {
+        Deployment rc = new Deployment();
+        try {
+            rc = Common._kube.apps().deployments().inNamespace(nsName).withName(rcName).get();
+            System.out.println("replication controller read success");
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("replication controller read failed");
+        }
+        return rc;
+    }
 }
