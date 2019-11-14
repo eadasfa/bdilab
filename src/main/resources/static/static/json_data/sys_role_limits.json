@@ -1,0 +1,26 @@
+{
+    "list":[
+        {
+            "userPrivateID":1,
+            "userPrivateName":"添加"
+        }
+        ,
+        {
+            "userPrivateID": 2,
+            "userPrivateName": "删除"
+        }
+    ,{
+            "userPrivateID":3,
+            "userPrivateName":"修改"
+        }
+    ,{
+            "userPrivateID":4,
+            "userPrivateName":"查找"
+        }
+    ,{
+            "userPrivateID":5,
+            "userPrivateName":"搜索"
+        }
+
+    ]
+}

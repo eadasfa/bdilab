@@ -7,6 +7,11 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class RcServiceImpl implements RcService {
 
@@ -127,5 +132,22 @@ public class RcServiceImpl implements RcService {
             System.out.println("replication controller read failed");
         }
         return rc;
+    }
+    /**
+     * 获取所有的副本信息
+    * */
+    @Override
+    public List<Map<Object,Object>> getAllDeployment(String nsName) {
+        List<Deployment> list= Common._kube.apps().deployments().inNamespace(nsName).list().getItems();
+        List<Map<Object,Object>> result=new ArrayList<>();
+        for(Deployment d:list){
+            Map<Object,Object> map=new HashMap<>();
+            map.put("name",d.getMetadata().getName());
+            // 副本数量
+            map.put("replicas",d.getSpec().getReplicas());
+            map.put("creationTimestamp",d.getMetadata().getCreationTimestamp());
+            result.add(map);
+        }
+        return result;
     }
 }

@@ -3,24 +3,24 @@ package com.bdi.lab.controller;
 import com.bdi.lab.service.ServiceService;
 import com.bdi.lab.service.ServiceServiceImpl;
 import com.bdi.lab.utils.Common;
+import com.bdi.lab.utils.ShellExec;
 import io.fabric8.kubernetes.api.model.Service;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.bdi.lab.utils.ShellExec.getRecoverTime;
 
 @Controller
 @RequestMapping("/service")
 public class ServiceController {
-
     @Autowired
     private ServiceService service;
-
     /**
      * 获取所有的服务名称和状态
     * */
@@ -51,14 +51,14 @@ public class ServiceController {
     /**
      * 根据服务名称停止某个服务
     * */
-    @PostMapping("/stopService/{serviceName}")
+    @GetMapping("/stopService/{serviceName}")
     public ResponseEntity stopService(@PathVariable("serviceName") String serviceName){
         return ResponseEntity.ok(service.stopService(serviceName));
     }
     /**
      * 根据服务名称，开启某个服务并给定服务副本的数量。
     * */
-    @PostMapping("/startService/{serviceName}/{num}")
+    @GetMapping("/startService/{serviceName}/{num}")
     public ResponseEntity startService(@PathVariable("serviceName") String serviceName,
                                        @PathVariable("num") Integer num){
 
@@ -71,7 +71,10 @@ public class ServiceController {
     @DeleteMapping("/deleteService/{serviceName}")
     public ResponseEntity deleteService(@PathVariable("serviceName") String serviceName){
         service.deleteService(serviceName);
-        return ResponseEntity.ok("code:1");
+        Map<Object,Object> result=new HashMap<>();
+        result.put("code",1);
+        result.put("message","删除成功!");
+        return ResponseEntity.ok(result);
     }
 
     /**
@@ -95,7 +98,7 @@ public class ServiceController {
 
 
     /**
-     *
+     *根据服务名称得到版本的数量
     * */
     @GetMapping("/getVersionSize/{serviceName}")
     public ResponseEntity getVersionSize(@PathVariable("serviceName") String serviceName){
@@ -114,12 +117,13 @@ public class ServiceController {
    /**
     * 新的创建服务的接口
    * */
-    @RequestMapping(value = "/createservice", method = RequestMethod.POST)
+    @RequestMapping(value = "/createservice", method = RequestMethod.GET)
     public ResponseEntity createk8sservice(@RequestParam(value = "srName") String srName,
                                     @RequestParam(value = "lbkey") String lbkey,
                                     @RequestParam(value = "lbvalue") String lbvalue,
-                                    @RequestParam(value = "cnPort") int cnPort){
-        return ResponseEntity.ok(ServiceServiceImpl.createService(srName, "default", lbkey, lbvalue, cnPort));
+                                    @RequestParam(value = "cnPort") int cnPort,
+                                    @RequestParam(value = "ndPort",required = false) int ndPort){
+        return ResponseEntity.ok(ServiceServiceImpl.createService(srName, "default", lbkey, lbvalue, cnPort,ndPort));
     }
 
 
@@ -140,6 +144,44 @@ public class ServiceController {
     }
 
 
+    @GetMapping("/testWeight")
+    public ResponseEntity testWeight(@RequestParam("name") String name, @RequestParam("firstWeight")
+            int firstWeight,@RequestParam("secondWeight") int secondWeight){
+        List<Integer> weights = new ArrayList<>();
+        weights.add(firstWeight);
+        weights.add(secondWeight);
+        service.changeWeight(name,weights);
+        String cmd = " sh /home/script/visit.sh ";
+        String result = ShellExec.execute(cmd).toString();
+        return ResponseEntity.ok(result);
+    }
 
+
+    /**
+     *根据服务名称，模拟故障恢复时间
+    * */
+    @GetMapping("/revocerTimeTest")
+    public ResponseEntity revocerTimeTest(@RequestParam("name") String name){
+        String time=getRecoverTime(name);
+        return ResponseEntity.ok("服务的故障恢复时间为:"+time+"ms");
+    }
+
+
+    /**
+     *根据服务名称，设置服务的优先级（总共有三个值）:high middle low
+     * */
+    @GetMapping("/settingPriority")
+    public ResponseEntity settingPriority(@RequestParam("name") String name,
+                                          @RequestParam("priority") String priority){
+        String result=service.change_priority(name,priority);
+        return ResponseEntity.ok(result);
+    }
+    /**
+     *根据服务名称，设置服务的优先级（总共有三个值）:high middle low
+     * */
+    @GetMapping("/getIP")
+    public ResponseEntity getIP(){
+        return ResponseEntity.ok("http://"+Common.IP+":32000");
+    }
 
 }

@@ -35,7 +35,12 @@ public class ServiceServiceImpl implements ServiceService {
             if(!n.getMetadata().getName().equals("kubernetes")) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("name",n.getMetadata().getName());
-                //map.put("version",getVersionSize(n.getMetadata().getName()));
+                // 版本数量
+                try {
+                    map.put("version",getVersionSize(n.getMetadata().getName()) );
+                }catch (Exception e){
+                    map.put("version",1);
+                }
                 map.put("state",getState(n.getMetadata().getName()));
                 serviceList.add(map);
             }
@@ -72,8 +77,8 @@ public class ServiceServiceImpl implements ServiceService {
             }
         }
         if(flag)
-            return "Running";
-        return "Terminated";
+            return "运行中";
+        return "停止";
     }
 
     @Override
@@ -100,7 +105,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Map<String,String> stopService(String serviceName) {
         Map<String,String> resultMap = new HashMap<>();
-        if(!getState(serviceName).equals("Running")){
+        if(!getState(serviceName).equals("运行中")){
             resultMap.put("message","Error: The service is terminated");
             resultMap.put("code","0");
             return resultMap;
@@ -122,7 +127,7 @@ public class ServiceServiceImpl implements ServiceService {
             resultMap.put("code","0");
             return resultMap;
         }
-        if(getState(serviceName).equals("Running")){
+        if(getState(serviceName).equals("运行中")){
             resultMap.put("message","Error: The service is running");
             resultMap.put("code","0");
             return resultMap;
@@ -190,10 +195,30 @@ public class ServiceServiceImpl implements ServiceService {
         http.endHttp().endSpec().done();
         return true;
     }
-   /**
+    /**
+     * 设置服务的优先级:其中name为副本控制器的名称
+     * */
+    @Override
+    public String change_priority(String name, String priorityName) {
+        _kube.apps().deployments()
+                .inNamespace("default")
+                .withName(name)
+                .edit()
+                .editSpec()
+                .editTemplate()
+                .editSpec()
+                .withNewPriorityClassName(priorityName)
+                .endSpec()
+                .endTemplate()
+                .endSpec()
+                .done();
+        return "设置成功!";
+    }
+
+    /**
     * 新的服务创建
    * */
-    public static io.fabric8.kubernetes.api.model.Service createService(String seriveName, String nsName, String labelkey, String labelvalue, int cnPort){
+    public static io.fabric8.kubernetes.api.model.Service createService(String seriveName, String nsName, String labelkey, String labelvalue, int cnPort,int ndport){
         io.fabric8.kubernetes.api.model.Service service = new ServiceBuilder()
                 .withApiVersion("v1")
                 .withKind("Service")
@@ -204,6 +229,7 @@ public class ServiceServiceImpl implements ServiceService {
                 .endMetadata()
                 .withNewSpec()
                 .addNewPort()
+                .withNodePort(ndport)
                 .withPort(cnPort)
                 .endPort()
                 .withType("NodePort")
@@ -219,4 +245,6 @@ public class ServiceServiceImpl implements ServiceService {
         }
         return service;
     }
+
+
 }

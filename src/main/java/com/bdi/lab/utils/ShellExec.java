@@ -13,15 +13,18 @@ import java.util.List;
 
 public class ShellExec {
     public static void main(String[] args) {
-        String ip = "192.168.0.153";
-        String username = "root";
-        String passwd = "123456";
-        String cmd = "kubectl get pods -n k8s-test ";
-        StringBuilder result = execute(username,passwd,ip,cmd);
-        System.out.println(result.toString());
+//        String ip = "192.168.0.153";
+//        String username = "root";
+//        String passwd = "123456";
+//        String cmd = "kubectl get pods -n k8s-test ";
+//        StringBuilder result = execute(username,passwd,ip,cmd);
+//        System.out.println(result.toString());
 //        Arrays.stream(getEndPoints(result)).forEach(n->{
 //            System.out.println(n);
 //        });
+        for (int i=0;i<10;i++){
+            System.out.println(i+": "+getRecoverTime("task")+"ms");
+        }
     }
     public static StringBuilder execute(String cmd) {
         return execute(Common.USERNAME,Common.PASSWORD,Common.IP, cmd);
@@ -77,5 +80,62 @@ public class ShellExec {
         int end = s.indexOf("Session Affinity");
         String[] s2 = s.substring(start,end).replaceAll("\\s*","").split(",");
         return s2;
+    }
+    /**
+     * 故障恢复
+    * */
+    public static String getRecoverTime(String name){
+
+        String cmd1 = "sh /home/script/recover-task.sh"+" "+name;
+        String cmd2 = " kubectl delete pods -l app="+name;
+        ExeThread thread1 = new ExeThread(cmd1);
+        ExeThread thread2 = new ExeThread(cmd2);
+        boolean flag=false;
+
+        thread1.start();
+        if(thread1.isAlive()){
+            flag=true;
+            System.out.println("线程1启动");
+        }
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(flag) {
+            thread2.start();
+            System.out.println("线程2启动");
+        }
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String res = thread1.getReturn().toString().trim();
+//        System.out.println(res);
+//        System.out.println(Integer.parseInt(res));
+        return res;
+    }
+}
+class ExeThread extends Thread{
+    private StringBuilder res = null;
+    private String cmd = "";
+    public ExeThread(String cmd){
+        this.cmd = cmd;
+    }
+    public StringBuilder getReturn(){
+        return res;
+    }
+    public void run(){
+        this.res=ShellExec.execute(cmd);
+//        while (true){
+//            try {
+//                Thread.sleep(1000);
+//                System.out.println(this.cmd);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

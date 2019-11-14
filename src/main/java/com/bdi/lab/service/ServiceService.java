@@ -27,6 +27,7 @@ public interface ServiceService {
     public int getVersionSize(String serviceName);
 
     public boolean changeWeight(String serviceName,List<Integer> weights);
+    public String change_priority(String name,String priorityName);
 
 
 }

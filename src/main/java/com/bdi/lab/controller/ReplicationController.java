@@ -17,14 +17,13 @@ public class ReplicationController {
      * */
     @RequestMapping(value = "/createrc", method = RequestMethod.POST)
     public ResponseEntity createk8src(@RequestParam(value = "rcName") String rcName,
-                                      @RequestParam(value = "nsName") String nsName,
                                       @RequestParam(value = "lbkey") String lbkey,
                                       @RequestParam(value = "lbvalue") String lbvalue,
                                       @RequestParam(value = "replicas") int replicas,
                                       @RequestParam(value = "ctName") String ctName,
                                       @RequestParam(value = "imName") String imName,
                                       @RequestParam(value = "cnPort") int cnPort) {
-        return ResponseEntity.ok(rcService.createRC(rcName, nsName, lbkey, lbvalue, replicas, ctName, imName, cnPort));
+        return ResponseEntity.ok(rcService.createDeployment(rcName, "default", lbkey, lbvalue, replicas, ctName, imName, cnPort));
     }
     /**
      * k8s rc delete
@@ -41,5 +40,13 @@ public class ReplicationController {
     @RequestMapping(value = "/readrc", method = RequestMethod.GET)
     public ResponseEntity readk8src(@RequestParam(value = "rcName") String rcName){
         return ResponseEntity.ok(rcService.readRC("default", rcName));
+    }
+
+    /**
+     * 获取所有的副本信息
+    * */
+    @RequestMapping(value = "/getAllRc", method = RequestMethod.GET)
+    public ResponseEntity getAllRc(){
+        return ResponseEntity.ok(rcService.getAllDeployment("default"));
     }
 }

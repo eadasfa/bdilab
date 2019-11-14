@@ -1,0 +1,33 @@
+{
+    "list": [
+        {
+            "role_id":1,
+            "role_name":"管理员",
+            "role_limits":[
+                {
+                    "limits_id":1,
+                    "limits_name":"添加"
+                },
+                {
+                    "limits_id":2,
+                    "limits_name":"删除"
+                }
+            ]
+        },
+        {
+            "role_id":1,
+            "role_name":"销售员",
+            "role_limits":[
+                {
+                    "limits_id":3,
+                    "limits_name":"修改"
+                },
+                {
+                    "limits_id":4,
+                    "limits_name":"查找"
+                }
+            ]
+        }
+    ],
+    "lines":100
+}

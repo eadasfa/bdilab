@@ -24,7 +24,7 @@ public class TestWithFabric8 {
 ////                .endTemplate()
 ////                .endSpec()
 ////                .done();
-        change_priority("default","reviews-v2","medium-priority");
+       // change_priority("default","reviews-v2","medium-priority");
 
     }
     public static void changeLabelsInRc(String namespace,String name,Map<String,String> labels){
@@ -79,18 +79,5 @@ public class TestWithFabric8 {
         }
         return map;
     }
-    public static void change_priority(String namespace,String name,String priorityName){
-        _kube.apps().deployments()
-                .inNamespace(namespace)
-                .withName(name)
-                .edit()
-                .editSpec()
-                .editTemplate()
-                .editSpec()
-                .withNewPriorityClassName(priorityName)
-                .endSpec()
-                .endTemplate()
-                .endSpec()
-                .done();
-    }
+
 }
