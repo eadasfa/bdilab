@@ -57,6 +57,7 @@ public class PodController {
     * */
     @RequestMapping(value = "/getPods", method = RequestMethod.GET)
     public ResponseEntity getPods(){
+        System.out.println(Common.IP);
         List<Map<Object,Object>> result=new ArrayList<>();
         List<Pod> podList = new ArrayList<>();
         try {

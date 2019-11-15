@@ -1,6 +1,4 @@
 package com.bdi.lab;
-
-import com.bdi.lab.test.TestApi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
