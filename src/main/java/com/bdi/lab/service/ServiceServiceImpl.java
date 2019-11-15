@@ -27,7 +27,7 @@ public class ServiceServiceImpl implements ServiceService {
 //        map.put("app","myweb");
 //        s.createService(NAMESPACE,map,"NodePort","myweb",8080,30001);
 //        s.stopService("equipment");
-        s.startService("equipment",1);
+        s.deleteService("arms");
     }
     @Override
     public List<Map<String, Object>> getServiceName() {
@@ -148,9 +148,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Map<String,String> createService(String nameSpace,
-                             Map<String,String> selector,String type,
-                             String name,Integer Port,
-                             Integer nodePort,Map<String,String> lables){
+                                            Map<String,String> selector,String type,
+                                            String name,Integer Port,
+                                            Integer nodePort,Map<String,String> lables){
         Map<String,String> resultMap = new HashMap<>();
         com.bdi.lab.entity.Service service=com.bdi.lab.entity.Service.newInstance(nameSpace,
                 selector,type,name,Port,nodePort,lables);
@@ -201,12 +201,13 @@ public class ServiceServiceImpl implements ServiceService {
      * */
     @Override
     public String change_priority(String name, String priorityName) {
+        String destinatioruleName = name.split("-")[0];
         if(priorityName.equals("high"))
-            TestIstio.setMaxConnection("default",name,10,10,10,10);
+            TestIstio.setMaxConnection("default",destinatioruleName,10,10,10,10);
         if(priorityName.equals("low"))
-            TestIstio.setMaxConnection("default",name,5,5,5,5);
+            TestIstio.setMaxConnection("default",destinatioruleName,5,5,5,5);
         if(priorityName.equals("middle"))
-            TestIstio.setMaxConnection("default",name,8,8,8,8);
+            TestIstio.setMaxConnection("default",destinatioruleName,8,8,8,8);
         _kube.apps().deployments()
                 .inNamespace("default")
                 .withName(name)
@@ -223,8 +224,8 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     /**
-    * 新的服务创建
-   * */
+     * 新的服务创建
+     * */
     public static io.fabric8.kubernetes.api.model.Service createService(String seriveName, String nsName, String labelkey, String labelvalue, int cnPort,int ndport){
         io.fabric8.kubernetes.api.model.Service service = new ServiceBuilder()
                 .withApiVersion("v1")
@@ -236,10 +237,10 @@ public class ServiceServiceImpl implements ServiceService {
                 .endMetadata()
                 .withNewSpec()
                 .addNewPort()
-                .withNodePort(ndport)
+//                .withNodePort(ndport)
                 .withPort(cnPort)
                 .endPort()
-                .withType("NodePort")
+                //.withType("NodePort")
                 .addToSelector(labelkey,labelvalue)
                 .endSpec()
                 .build();

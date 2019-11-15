@@ -120,18 +120,18 @@ public class TestIstio {
      * @return
      */
     public  static boolean setMaxConnection(String namespace, String destinationRuleName, int maxConnection,
-                                     int maxRequestsPerConnection, int maxRequests,int maxPendingRequests){
+                                            int maxRequestsPerConnection, int maxRequests,int maxPendingRequests){
         _istio.destinationRule().inNamespace(namespace).withName(destinationRuleName)
                 .edit()
-                .editSpec()
-                .editTrafficPolicy()
-                .editConnectionPool()
-                .editHttp()
+                .editOrNewSpec()
+                .editOrNewTrafficPolicy()
+                .editOrNewConnectionPool()
+                .editOrNewHttp()
                 .withHttp1MaxPendingRequests(maxPendingRequests)
                 //.withHttp2MaxRequests(maxRequests)
                 //.withMaxRequestsPerConnection(maxRequestsPerConnection)
                 .endHttp()
-                .editTcp()
+                .editOrNewTcp()
                 .withMaxConnections(maxConnection)
                 .endTcp()
                 .endConnectionPool()
