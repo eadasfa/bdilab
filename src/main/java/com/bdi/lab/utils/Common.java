@@ -7,7 +7,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import me.snowdrop.istio.client.DefaultIstioClient;
 import me.snowdrop.istio.client.IstioClient;
 public class Common {
-    public static  String IP = "192.168.0.00";
+    public static  String IP = "192.168.0.153";
     public static final int PORT = 8080;
     public static  String USERNAME = "root";
     public static  String PASSWORD="123456";
