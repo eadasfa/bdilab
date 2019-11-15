@@ -12,7 +12,6 @@ public class Common {
     public static  String USERNAME = "root";
     public static  String PASSWORD="123456";
     public static final String NAMESPACE="k8s-test";
-
     public static Config config = new ConfigBuilder().withMasterUrl("http://"+IP+":"+PORT).build();
     public static KubernetesClient _kube = new DefaultKubernetesClient(config);//使用默认的就足够了
     public static IstioClient _istio = new DefaultIstioClient(config);
