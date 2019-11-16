@@ -1,4 +1,5 @@
 package com.bdi.lab.service;
+import com.bdi.lab.test.TestIstio;
 import com.bdi.lab.utils.Common;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -200,6 +201,12 @@ public class ServiceServiceImpl implements ServiceService {
      * */
     @Override
     public String change_priority(String name, String priorityName) {
+        if(priorityName.equals("high"))
+            TestIstio.setMaxConnection("default",name,10,10,10,10);
+        if(priorityName.equals("low"))
+            TestIstio.setMaxConnection("default",name,5,5,5,5);
+        if(priorityName.equals("middle"))
+            TestIstio.setMaxConnection("default",name,8,8,8,8);
         _kube.apps().deployments()
                 .inNamespace("default")
                 .withName(name)

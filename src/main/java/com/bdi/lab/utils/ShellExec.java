@@ -112,10 +112,10 @@ public class ShellExec {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String res = thread1.getReturn().toString().trim();
+        String result = thread1.getReturn().toString().trim();
 //        System.out.println(res);
 //        System.out.println(Integer.parseInt(res));
-        return res;
+        return result;
     }
 }
 class ExeThread extends Thread{
