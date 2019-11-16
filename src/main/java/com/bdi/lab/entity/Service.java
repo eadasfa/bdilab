@@ -37,18 +37,18 @@ public class Service extends io.fabric8.kubernetes.api.model.Service{
         this.state = state;
     }
     public static Service newInstance(String nameSpace,
-                              Map<String,String> map,String type,
-                              String name,Integer Port,
-                              Integer nodePort,Map<String,String> labelsMap){
+                                      Map<String,String> map,String type,
+                                      String name,Integer Port,
+                                      Integer nodePort,Map<String,String> labelsMap){
         ObjectMeta obj =new ObjectMeta();
         obj.setName(name);
         obj.setNamespace(nameSpace);
-        obj.setLabels(labelsMap);
+        //obj.setLabels(labelsMap);
         ServiceSpec spec=new ServiceSpec();
-        spec.setType(type);
+        //spec.setType(type);
         ServicePort port=new ServicePort();
         port.setPort(Port);
-        port.setNodePort(nodePort);
+//        port.setNodePort(nodePort);
         List<ServicePort> servicePorts=new ArrayList<>();
         servicePorts.add(port);
         spec.setPorts(servicePorts);

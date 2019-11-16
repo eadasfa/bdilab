@@ -23,7 +23,7 @@ public class ServiceController {
     private ServiceService service;
     /**
      * 获取所有的服务名称和状态
-    * */
+     * */
     @GetMapping("/getAllService")
     public ResponseEntity getService(){
         return ResponseEntity.ok(service.getServiceName());
@@ -32,16 +32,16 @@ public class ServiceController {
 
     /**
      * 根据服务名称得到服务状态
-    * */
+     * */
     @GetMapping("/getState/{serviceName}")
     public ResponseEntity getServiceState(@PathVariable("serviceName") String serviceName) {
         return ResponseEntity.ok(service.getState(serviceName));
-         //        return service.getState(serviceName);
+        //        return service.getState(serviceName);
     }
 
     /**
      * 根据服务名称获取服务的所有信息
-    * */
+     * */
     @GetMapping("/getAllInfo/{serviceName}")
     public ResponseEntity getAllInfoOfService(@PathVariable("serviceName") String serviceName) {
 
@@ -50,14 +50,14 @@ public class ServiceController {
     }
     /**
      * 根据服务名称停止某个服务
-    * */
+     * */
     @GetMapping("/stopService/{serviceName}")
     public ResponseEntity stopService(@PathVariable("serviceName") String serviceName){
         return ResponseEntity.ok(service.stopService(serviceName));
     }
     /**
      * 根据服务名称，开启某个服务并给定服务副本的数量。
-    * */
+     * */
     @GetMapping("/startService/{serviceName}/{num}")
     public ResponseEntity startService(@PathVariable("serviceName") String serviceName,
                                        @PathVariable("num") Integer num){
@@ -67,9 +67,10 @@ public class ServiceController {
 
     /**
      *根据服务名称删除某个服务
-    * */
+     * */
     @DeleteMapping("/deleteService/{serviceName}")
     public ResponseEntity deleteService(@PathVariable("serviceName") String serviceName){
+        System.out.println(serviceName);
         service.deleteService(serviceName);
         Map<Object,Object> result=new HashMap<>();
         result.put("code",1);
@@ -79,7 +80,7 @@ public class ServiceController {
 
     /**
      *根据服务参数创建服务。
-    * */
+     * */
     @PostMapping("/createService")
     public ResponseEntity createService(@RequestBody Map<String,Object> params){
 
@@ -99,14 +100,14 @@ public class ServiceController {
 
     /**
      *根据服务名称得到版本的数量
-    * */
+     * */
     @GetMapping("/getVersionSize/{serviceName}")
     public ResponseEntity getVersionSize(@PathVariable("serviceName") String serviceName){
         return ResponseEntity.ok(service.getVersionSize(serviceName));
     }
     /**
      *根据服务参数改变服务权重
-    * */
+     * */
     @PostMapping("/changeWeight")
     public ResponseEntity changeWeight(@RequestBody Map<String,Object> params){
         String serviceName = (String)params.get("name");
@@ -114,22 +115,23 @@ public class ServiceController {
         return ResponseEntity.ok("code:"+(service.changeWeight(serviceName,weights)?1:0));
     }
 
-   /**
-    * 新的创建服务的接口
-   * */
+    /**
+     * 新的创建服务的接口
+     * */
     @RequestMapping(value = "/createservice", method = RequestMethod.GET)
     public ResponseEntity createk8sservice(@RequestParam(value = "srName") String srName,
-                                    @RequestParam(value = "lbkey") String lbkey,
-                                    @RequestParam(value = "lbvalue") String lbvalue,
-                                    @RequestParam(value = "cnPort") int cnPort,
-                                    @RequestParam(value = "ndPort",required = false) int ndPort){
-        return ResponseEntity.ok(ServiceServiceImpl.createService(srName, "default", lbkey, lbvalue, cnPort,ndPort));
+                                           @RequestParam(value = "lbkey") String lbkey,
+                                           @RequestParam(value = "lbvalue") String lbvalue,
+                                           @RequestParam(value = "cnPort") int cnPort
+                                           //, @RequestParam(value = "ndPort",required = false) int ndPort
+    ){
+        return ResponseEntity.ok(ServiceServiceImpl.createService(srName, "default", lbkey, lbvalue, cnPort,0));
     }
 
 
     /**
      * 新的查询服务的接口
-    * */
+     * */
     @RequestMapping(value = "/readservice", method = RequestMethod.GET)
     public ResponseEntity readservice(@RequestParam(value = "serviceName") String serviceName){
         Service service = new Service();
@@ -159,7 +161,7 @@ public class ServiceController {
 
     /**
      *根据服务名称，模拟故障恢复时间
-    * */
+     * */
     @GetMapping("/revocerTimeTest")
     public ResponseEntity revocerTimeTest(@RequestParam("name") String name){
         String time=getRecoverTime(name);
