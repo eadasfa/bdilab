@@ -20,7 +20,7 @@ import static com.bdi.lab.utils.Common._istio;
 public class ServiceServiceImpl implements ServiceService {
 
     private static final String NAMESPACE = "default";
-    private static KubernetesClient _kube = Common._kube;
+//    private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) {
         ServiceServiceImpl s = new ServiceServiceImpl();
 //        Map<String,String> map = new HashMap<>();
@@ -32,7 +32,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public List<Map<String, Object>> getServiceName() {
         List<Map<String,Object>> serviceList = new ArrayList<>();
-        _kube.services().inNamespace(NAMESPACE).list().getItems().forEach(n->{
+        Common._kube.services().inNamespace(NAMESPACE).list().getItems().forEach(n->{
             if(!n.getMetadata().getName().equals("kubernetes")) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("name",n.getMetadata().getName());
@@ -51,7 +51,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public com.bdi.lab.entity.Service getAllInfo(String serviceName) {
-        io.fabric8.kubernetes.api.model.Service s = _kube.services()
+        io.fabric8.kubernetes.api.model.Service s = Common._kube.services()
                 .inNamespace(NAMESPACE)
                 .withName(serviceName).get();
         com.bdi.lab.entity.Service result = new com.bdi.lab.entity.Service(s);
@@ -62,9 +62,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     public  String getState(String serviceName) {
 
-        Map<String,String> labels = _kube.services().inNamespace(NAMESPACE).withName(serviceName)
+        Map<String,String> labels = Common._kube.services().inNamespace(NAMESPACE).withName(serviceName)
                 .get().getSpec().getSelector();
-        List<Pod> pods = _kube.pods().inNamespace(NAMESPACE).withLabels(labels).list().getItems();
+        List<Pod> pods = Common._kube.pods().inNamespace(NAMESPACE).withLabels(labels).list().getItems();
         boolean flag = false;
         lable:
         for (Pod pod: pods){
@@ -85,7 +85,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public void updateReplicas(String namespace, String serviceName, int num ){
 
-        _kube .apps().deployments()
+        Common._kube .apps().deployments()
                 .inNamespace(namespace )
                 .withName(serviceName )
                 .edit()
@@ -93,7 +93,7 @@ public class ServiceServiceImpl implements ServiceService {
                 .withReplicas(num)
                 .endSpec()
                 .done() ;
-//        _kube .replicationControllers()
+//        Common._kube .replicationControllers()
 //                .inNamespace(namespace )
 //                .withName(serviceName )
 //                .edit()
@@ -111,7 +111,7 @@ public class ServiceServiceImpl implements ServiceService {
             resultMap.put("code","0");
             return resultMap;
         }
-        List<Deployment> deployments= _kube.apps().deployments().inNamespace(NAMESPACE)
+        List<Deployment> deployments= Common._kube.apps().deployments().inNamespace(NAMESPACE)
                 .withLabel("app",serviceName).list().getItems();
         for(Deployment dp : deployments){
             this.updateReplicas(NAMESPACE,dp.getMetadata().getName(),0);
@@ -133,7 +133,7 @@ public class ServiceServiceImpl implements ServiceService {
             resultMap.put("code","0");
             return resultMap;
         }
-        List<Deployment> deployments= _kube.apps().deployments().inNamespace(NAMESPACE)
+        List<Deployment> deployments= Common._kube.apps().deployments().inNamespace(NAMESPACE)
                 .withLabel("app",serviceName).list().getItems();
         for(Deployment dp : deployments){
             this.updateReplicas(NAMESPACE,dp.getMetadata().getName(),num);
@@ -143,7 +143,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
     @Override
     public void deleteService(String serviceName){
-        _kube.services().inNamespace(NAMESPACE).withName(serviceName).delete();
+        Common._kube.services().inNamespace(NAMESPACE).withName(serviceName).delete();
     }
 
     @Override
@@ -155,7 +155,7 @@ public class ServiceServiceImpl implements ServiceService {
         com.bdi.lab.entity.Service service=com.bdi.lab.entity.Service.newInstance(nameSpace,
                 selector,type,name,Port,nodePort,lables);
         try {
-            _kube.services().inNamespace(NAMESPACE).create(service);
+            Common._kube.services().inNamespace(NAMESPACE).create(service);
         }catch (KubernetesClientException e){
 //            System.out.println(e.getMessage());
             resultMap.put("message",e.getMessage());
@@ -208,7 +208,7 @@ public class ServiceServiceImpl implements ServiceService {
             TestIstio.setMaxConnection("default",destinatioruleName,5,5,5,5);
         if(priorityName.equals("middle"))
             TestIstio.setMaxConnection("default",destinatioruleName,8,8,8,8);
-        _kube.apps().deployments()
+        Common._kube.apps().deployments()
                 .inNamespace("default")
                 .withName(name)
                 .edit()
@@ -245,7 +245,7 @@ public class ServiceServiceImpl implements ServiceService {
                 .endSpec()
                 .build();
         try {
-            _kube.services().create(service);
+            Common._kube.services().create(service);
             System.out.println("service create success");
         }catch (Exception e){
             e.printStackTrace();

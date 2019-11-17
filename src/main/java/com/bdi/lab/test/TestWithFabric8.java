@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class TestWithFabric8 {
-    private static KubernetesClient _kube = Common._kube;
+//    private static KubernetesClient _kube = Common._kube;
     public static void main(String[] args) throws InterruptedException {
 //        _kube.apps().replicaSets().inNamespace("default").withName("ratings-v1-858fb7569b").edit().editSpec().editTemplate().editSpec().withNewPriorityClassName("high-priority")
 //        .endSpec()
@@ -28,7 +28,7 @@ public class TestWithFabric8 {
 
     }
     public static void changeLabelsInRc(String namespace,String name,Map<String,String> labels){
-        _kube.replicationControllers().inNamespace(namespace).withName(name)
+        Common._kube.replicationControllers().inNamespace(namespace).withName(name)
                 .edit()
                 .editSpec()
                 .editTemplate()
@@ -40,11 +40,11 @@ public class TestWithFabric8 {
                 .done();
     }
     public static int getReplicas(String namespace, String RcName){
-        return _kube.replicationControllers().inNamespace(namespace).withName(RcName)
+        return Common._kube.replicationControllers().inNamespace(namespace).withName(RcName)
                 .get().getSpec().getReplicas().intValue();
     }
     public static void changeReplicas(String namespace, String RcName, int num ){
-     _kube .replicationControllers()
+        Common._kube .replicationControllers()
              .inNamespace(namespace )
              .withName(RcName )
              .edit()
@@ -71,7 +71,7 @@ public class TestWithFabric8 {
     }
     public static Map<String,String> queryPodPhase(){
         Map<String, String> map = new HashMap<>();
-        List<Pod> pl = _kube.pods().inNamespace("k8s-test").withLabel("app","mysql")
+        List<Pod> pl = Common._kube.pods().inNamespace("k8s-test").withLabel("app","mysql")
                 .list()
                 .getItems();
         for (Pod po: pl){

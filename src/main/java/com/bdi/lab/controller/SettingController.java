@@ -2,6 +2,7 @@ package com.bdi.lab.controller;
 
 
 import com.bdi.lab.utils.Common;
+import com.sun.javafx.css.Combinator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ public class SettingController {
         Common.IP=ip;
         Common.USERNAME=username;
         Common.PASSWORD=password;
+        Common.resetKubeAndIstioClient();
         return ResponseEntity.ok("设置成功!");
 
     }
