@@ -8,6 +8,7 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import me.snowdrop.istio.api.networking.v1alpha3.DoneableVirtualService;
+import me.snowdrop.istio.api.networking.v1alpha3.HTTPRoute;
 import me.snowdrop.istio.api.networking.v1alpha3.VirtualServiceFluent;
 import me.snowdrop.istio.api.networking.v1alpha3.VirtualServiceSpecFluent;
 import org.springframework.stereotype.Service;
@@ -166,13 +167,23 @@ public class ServiceServiceImpl implements ServiceService {
         return resultMap;
     }
 
+
     @Override
     public int getVersionSize(String serviceName) {
         return _istio.virtualService().inNamespace(NAMESPACE).withName(serviceName)
                 .get().getSpec().getHttp().get(0).getRoute().size();
-
     }
-
+    @Override
+    public Map<String, String> get_weight(String virtualServiceName) {
+        Map<String,String> map = new HashMap<>();
+        HTTPRoute http = _istio.virtualService().inNamespace(NAMESPACE).withName(virtualServiceName)
+                .get().getSpec().getHttp().get(0);
+        int routeSize = http.getRoute().size();
+        for(int i=0;i<routeSize;i++){
+            map.put("v"+(i+1),http.getRoute().get(i).getWeight()+"");
+        }
+        return map;
+    }
     @Override
     public boolean changeWeight(String serviceName, List<Integer> weights) {
         VirtualServiceSpecFluent.HttpNested<VirtualServiceFluent.SpecNested<DoneableVirtualService>>
@@ -189,16 +200,22 @@ public class ServiceServiceImpl implements ServiceService {
             int weight= (int)((1.0*weights.get(i)/arraySum) * 100);
             if(i==routeSize-1) weight = 100-tempSum;
             http = http.editRoute(i)
-                    .withWeight(weight)
+                   .withWeight(weight)
                     .endRoute();
             tempSum += weight;
         }
         http.endHttp().endSpec().done();
         return true;
     }
+    @Override
+    public String get_priority(String deployName) {
+        return Common._kube.apps().deployments().inNamespace("default").withName(deployName)
+                .get().getSpec().getTemplate().getSpec().getPriorityClassName();
+    }
     /**
      * 设置服务的优先级:其中name为副本控制器的名称
      * */
+
     @Override
     public String change_priority(String name, String priorityName) {
         String destinatioruleName = name.split("-")[0];

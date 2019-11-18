@@ -23,8 +23,9 @@ public interface ServiceService {
                                              Map<String,String> selector,String type,
                                              String name,Integer Port,
                                              Integer nodePort,Map<String,String> lables);
-
+    public  Map<String,String> get_weight(String virtualServiceName);
     public int getVersionSize(String serviceName);
+    public String get_priority(String deployName);
 
     public boolean changeWeight(String serviceName,List<Integer> weights);
     public String change_priority(String name,String priorityName);

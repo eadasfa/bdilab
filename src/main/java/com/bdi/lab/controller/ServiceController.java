@@ -62,6 +62,7 @@ public class ServiceController {
     public ResponseEntity startService(@PathVariable("serviceName") String serviceName,
                                        @PathVariable("num") Integer num){
 
+        num = 1;
         return ResponseEntity.ok(service.startService(serviceName,num));
     }
 
@@ -176,6 +177,28 @@ public class ServiceController {
     public ResponseEntity settingPriority(@RequestParam("name") String name,
                                           @RequestParam("priority") String priority){
         String result=service.change_priority(name,priority);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     *
+     * @param virtualServiceName  实际就是service name
+     * @return 返回一个map类型的字符串{"v1":（v1的权重 数字），"v2": （v2的权重 数字）}
+     */
+    @GetMapping("/getWeight")
+    public ResponseEntity getWeight(
+            @RequestParam("virtualServiceName") String virtualServiceName){
+        return ResponseEntity.ok(service.get_weight(virtualServiceName));
+    }
+    /**
+     *
+     * @param deployName  使用的是副本控制器的名字
+     * @return 返回了一个String类型 即 high low middle
+     */
+    @GetMapping("/getPriority")
+    public ResponseEntity getPriority(
+            @RequestParam("deployName") String deployName){
+        String result=service.get_priority(deployName);
         return ResponseEntity.ok(result);
     }
     /**
