@@ -188,7 +188,12 @@ public class ServiceController {
     @GetMapping("/getWeight")
     public ResponseEntity getWeight(
             @RequestParam("virtualServiceName") String virtualServiceName){
+
         return ResponseEntity.ok(service.get_weight(virtualServiceName));
+    }
+
+    public static void main(String[] args) {
+        new ServiceController().getPriority("fortio-deploy");
     }
     /**
      *
@@ -198,7 +203,10 @@ public class ServiceController {
     @GetMapping("/getPriority")
     public ResponseEntity getPriority(
             @RequestParam("deployName") String deployName){
+//        service = new ServiceServiceImpl();
+
         String result=service.get_priority(deployName);
+//        System.out.println(result);
         return ResponseEntity.ok(result);
     }
     /**

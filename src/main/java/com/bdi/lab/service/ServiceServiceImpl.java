@@ -88,7 +88,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         Common._kube .apps().deployments()
                 .inNamespace(namespace )
-                .withName(serviceName )
+                .withName(serviceName)
                 .edit()
                 .editSpec()
                 .withReplicas(num)

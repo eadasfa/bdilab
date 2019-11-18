@@ -7,11 +7,11 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import me.snowdrop.istio.client.DefaultIstioClient;
 import me.snowdrop.istio.client.IstioClient;
 public class Common {
-    public static  String IP = "192.168.0.0";
+    public static  String IP = "172.16.78.176";
     public static final int PORT = 8080;
-    public static  String USERNAME = "rodot";
-    public static  String PASSWORD="12345df6";
-    public static final String NAMESPACE="k8s-test";
+    public static  String USERNAME = "root";
+    public static  String PASSWORD="0-p0-p";
+    public static final String NAMESPACE="default";
     public static Config config = new ConfigBuilder().withMasterUrl("http://"+IP+":"+PORT).build();
     public static KubernetesClient _kube = new DefaultKubernetesClient(config);//使用默认的就足够了
     public static IstioClient _istio = new DefaultIstioClient(config);
